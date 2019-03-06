@@ -1,18 +1,14 @@
-*Please update this README with your project details. Your project maintainer is **Anna**.*
+# Todo
+This is a CLI program for managing a to-do list.
 
-# Harry
-Team Harry project repository for CSI 280 Spring 2019
-
-## Project Description
-
-### Planned Features
-
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-
-## Build Directions
-
-## Dependencies
-
-## License
+## Planned Features
+- [ ] Adding, removing and listing tasks
+- [ ] Multiple to-do lists
+- [ ] Sorting and filtering of tasks
+- [ ] Searching for tasks
+- [ ] Sub-tasks
+- [ ] Descriptions and due dates for tasks
+- [ ] Priorities for tasks
+- [ ] Tags for grouping tasks
+- [ ] Reminders
+- [ ] Interactive mode
