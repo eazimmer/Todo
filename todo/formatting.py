@@ -38,3 +38,28 @@ class SimpleTaskFormatter(TaskFormatter):
             output += f"{task_id} {checkbox} {name}\n"
 
         return output
+
+    def format_with_completed(self, tasks: Collection[Task]) -> str:
+        output = ""
+        for task in tasks:
+            task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
+
+            if task.completed == True:
+                checkbox = "[X]"
+                name = task.name
+                output += f"{task_id} {checkbox} {name}\n"
+
+        return output
+
+    def format_with_uncompleted(self, tasks: Collection[Task]) -> str:
+        output = ""
+        for task in tasks:
+            task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
+
+            if task.completed == False:
+                checkbox = "[ ]"
+                name = task.name
+                output += f"{task_id} {checkbox} {name}\n"
+
+        return output
+

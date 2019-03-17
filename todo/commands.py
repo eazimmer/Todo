@@ -41,3 +41,141 @@ def check_task(task_id: int) -> None:
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         task = task_list.get_task(task_id)
         task.completed = True
+
+
+def toggle_tasks_by_completion() -> None:
+    """Toggles list by completed
+
+    Args:
+        None
+    """
+    formatter = SimpleTaskFormatter()
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        sorted_task_list = task_list.tasks
+        print(formatter.format_with_completed(sorted_task_list))
+
+def toggle_tasks_by_imcompletion() -> None:
+    """Toggles list by incompletion
+
+        Args:
+            None
+        """
+    formatter = SimpleTaskFormatter()
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        sorted_task_list = task_list.tasks
+        print(formatter.format_with_uncompleted(sorted_task_list))
+
+
+def list_tasks_via_completion() -> None:
+    """Sort lists based on completion
+
+    Args:
+        None
+    """
+    formatter = SimpleTaskFormatter()
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        sorted_task_list = task_list.tasks
+        completed_tasks = []
+        uncompleted_tasks = []
+
+        for task in sorted_task_list:
+            if task.completed:
+                completed_tasks.append(task)
+            else:
+                uncompleted_tasks.append(task)
+
+        print("Completed Tasks: ")
+        print(formatter.format(completed_tasks))
+        print("Uncompleted Tasks: ")
+        print(formatter.format(uncompleted_tasks))
+
+
+def list_tasks_alphabetically() -> None:
+    """Lists all tasks in alphabetical order
+
+    Args:
+         None
+    """
+
+    formatter = SimpleTaskFormatter()
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        original_task_list = task_list.tasks
+        names_in_order = []
+        finalized_list = []
+
+        for task in original_task_list:
+            names_in_order.append(task.name)
+
+        names_in_order.sort()
+
+        n = range(len(names_in_order))
+
+        for x in n:
+            for task in original_task_list:
+                if names_in_order[x] == task.name:
+                    finalized_list.append(task)
+
+
+        print(formatter.format(finalized_list))
+
+
+def list_tasks_via_creation() -> None:
+    """List tasks in order of creation
+
+    Args:
+         None
+    """
+
+    formatter = SimpleTaskFormatter()
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        original_task_list = task_list.tasks
+        created_in_order = []
+        finalized_list = []
+
+        for task in original_task_list:
+            created_in_order.append(task.created)
+
+        created_in_order.sort()
+
+        n = range(len(created_in_order))
+
+        for x in n:
+            for task in original_task_list:
+                if created_in_order[x] == task.created:
+                    finalized_list.append(task)
+
+        print(formatter.format(finalized_list))
+
+
+def list_tasks_via_id() -> None:
+    """List tasks in order of task iD
+
+        Args:
+             None
+        """
+
+    formatter = SimpleTaskFormatter()
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        original_task_list = task_list.tasks
+        id_in_order = []
+        finalized_list = []
+
+        for task in original_task_list:
+            id_in_order.append(task.task_id)
+
+        id_in_order.sort()
+
+        n = range(len(id_in_order))
+
+        for x in n:
+            for task in original_task_list:
+                if id_in_order[x] == task.task_id:
+                    finalized_list.append(task)
+
+        print(formatter.format(finalized_list))
