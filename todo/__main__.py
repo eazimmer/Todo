@@ -1,6 +1,6 @@
 """The main function of the program."""
 from todo.cli import parser
-from todo.commands import list_tasks, add_task, delete_task, check_task, toggle_tasks_by_completion, list_tasks_via_completion, list_tasks_alphabetically, list_tasks_via_creation, list_tasks_via_id, toggle_tasks_by_imcompletion
+from todo.commands import list_tasks, add_task, delete_task, check_task, toggle_tasks_by_completion, list_tasks_via_completion, list_tasks_alphabetically, list_tasks_via_creation, list_tasks_via_id, toggle_tasks_by_imcompletion, list_tasks_with_subtasks
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.task import TaskList
 
@@ -16,9 +16,10 @@ def main():
     # was called.
     args = parser.parse_args()
     if args.command == "list":
-        list_tasks()
+        # list_tasks()
+        list_tasks_with_subtasks()
     elif args.command == "add":
-        add_task(args.name)
+        add_task(args.name, args.parent)
     elif args.command == "delete":
         delete_task(args.id)
     elif args.command == "check":
@@ -35,8 +36,6 @@ def main():
         list_tasks_via_id()
     elif args.command == "toggle_incompletion":
         toggle_tasks_by_imcompletion()
-
-
 
 
 if __name__ == "__main__":

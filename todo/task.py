@@ -21,16 +21,17 @@ class Task:
         completed: Whether this task has been completed.
         created: The time and date at which this task was created. If None,
             this is the current time and date.
+        parent: The ID of a task's parent, or None, if the task is top-level.
     """
 
     def __init__(
             self, name: str, task_id: int, completed: bool = False,
-            created: Optional[datetime.datetime] = None
-    ) -> None:
+            created: Optional[datetime.datetime] = None, parent=None) -> None:
         self.name: str = name
         self.task_id: int = task_id
         self.completed: bool = completed
         self.created: datetime.datetime = created or datetime.datetime.now()
+        self.parent = parent
 
 
 class TaskList:
@@ -69,7 +70,7 @@ class TaskList:
         """A read-only view of the tasks in this task list."""
         return self._tasks.values()
 
-    def add_task(self, name: str) -> None:
+    def add_task(self, name: str, parent=None) -> None:
         """Add a task to this task list.
 
         The ID of the task is set to be the lowest ID not currently in use by
@@ -77,9 +78,19 @@ class TaskList:
 
         Args:
             name: The name of the task.
+            parent: The ID of a task's parent, or None, if the task is
+            top-level.
         """
-        new_task = Task(name=name, task_id=self._find_id())
-        self._tasks[new_task.task_id] = new_task
+        # sub-task
+        if parent is not None:
+            new_task = Task(name=name, task_id=self._find_id(),
+                            parent=parent)
+            self._tasks[new_task.task_id] = new_task
+
+        # parent task
+        else:
+            new_task = Task(name=name, task_id=self._find_id())
+            self._tasks[new_task.task_id] = new_task
 
     def remove_task(self, task_id: int) -> Task:
         """Remove the task with the given ID and return it."""
@@ -102,7 +113,8 @@ class TaskList:
                     "name": task.name,
                     "id": task.task_id,
                     "completed": task.completed,
-                    "created": task.created.timestamp()
+                    "created": task.created.timestamp(),
+                    "parent": task.parent
                 }
                 for task in self._tasks.values()
             ]
@@ -142,8 +154,8 @@ class TaskList:
                     task_id=json_task["id"],
                     completed=json_task["completed"],
                     created=datetime.datetime.fromtimestamp(
-                        json_task["created"]
-                    )
+                        json_task["created"]),
+                    parent=json_task["parent"]
                 )
                 for json_task in json_object["tasks"]
             ]

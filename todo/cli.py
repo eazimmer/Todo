@@ -18,11 +18,10 @@ list_via_id = subparsers.add_parser("list_id",help="List all tasks based on orde
 
 add_parser = subparsers.add_parser("add", help="Add a task.")
 add_parser.add_argument("name", help="The name of the task.")
+add_parser.add_argument("-p", "--parent", type=int, help="Used when creating sub-task; designates parent task.")
 
 remove_parser = subparsers.add_parser("delete", help="Delete a task.")
-remove_parser.add_argument(
-    "id", type=int, help="The ID of the task to delete."
-)
+remove_parser.add_argument("id", type=int, help="The ID of the task to delete.")
 
 check_parser = subparsers.add_parser("check", help="Mark a task as completed.")
 check_parser.add_argument(

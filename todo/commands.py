@@ -12,14 +12,22 @@ def list_tasks() -> None:
         print(formatter.format(task_list.tasks))
 
 
-def add_task(name: str) -> None:
+def add_task(name: str, parent_id=None) -> None:
     """Add a task.
 
     Args:
         name: The name of the task.
+        parent_id: The ID of a sub-task's parent, or None if task is top-level.
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-        task_list.add_task(name)
+
+        # parent-task
+        if parent_id is None:
+            task_list.add_task(name)
+
+        # sub-task
+        elif parent_id is not None:
+            task_list.add_task(name, int(parent_id))
 
 
 def delete_task(task_id: int) -> None:
@@ -40,7 +48,25 @@ def check_task(task_id: int) -> None:
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         task = task_list.get_task(task_id)
-        task.completed = True
+        all_complete = True
+
+        # parent-task
+        if task.parent is None:
+            for other_task in task_list.tasks:
+                if other_task.parent is not None and other_task.parent == \
+                            task.task_id and not other_task.completed:
+                    all_complete = False
+
+            if not all_complete:
+                print(
+                    "At least one sub-tasks is still incomplete. "
+                    "Check that first!")
+            else:
+                task.completed = True
+
+        # sub-task
+        else:
+            task.completed = True
 
 
 def toggle_tasks_by_completion() -> None:
@@ -54,6 +80,7 @@ def toggle_tasks_by_completion() -> None:
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         sorted_task_list = task_list.tasks
         print(formatter.format_with_completed(sorted_task_list))
+
 
 def toggle_tasks_by_imcompletion() -> None:
     """Toggles list by incompletion
@@ -119,7 +146,6 @@ def list_tasks_alphabetically() -> None:
                 if names_in_order[x] == task.name:
                     finalized_list.append(task)
 
-
         print(formatter.format(finalized_list))
 
 
@@ -179,3 +205,16 @@ def list_tasks_via_id() -> None:
                     finalized_list.append(task)
 
         print(formatter.format(finalized_list))
+
+
+def list_tasks_with_subtasks() -> None:
+    """List tasks alongside their respective sub-tasks if they have any.
+
+        Args:
+             None
+        """
+
+    formatter = SimpleTaskFormatter()
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        print(formatter.format_with_subtasks(task_list.tasks))
