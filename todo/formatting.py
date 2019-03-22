@@ -63,3 +63,39 @@ class SimpleTaskFormatter(TaskFormatter):
 
         return output
 
+    def format_with_subtasks(self, tasks: Collection[Task]) -> str:
+        output = ""
+        checkbox = ""
+
+        # Iterate through all tasks
+        for task in tasks:
+
+            task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
+            name = task.name
+            if task.completed:
+                checkbox = "[x]"
+            elif not task.completed:
+                checkbox = "[ ]"
+
+            # Select and print only parent tasks
+            if task.parent is None:
+
+                output += f"{task_id} {checkbox} {name}\n"
+
+                # Find all sub-tasks of a given parent task, and later print it
+                for other_task in tasks:
+
+                    task_id = "{0:<{1}}".format(other_task.task_id,
+                                                self.TASK_ID_PADDING)
+                    checkbox = ""
+                    name = other_task.name
+                    if other_task.completed:
+                        checkbox = "[x]"
+                    elif not other_task.completed:
+                        checkbox = "[ ]"
+
+                    if other_task.parent is not None and other_task.parent == \
+                            task.task_id:
+                        output += f"{task_id} {checkbox} --- {name}\n"
+
+        return output
