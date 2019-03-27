@@ -1,6 +1,6 @@
 """A function for each command."""
 from todo.constants import DEFAULT_LIST_PATH
-from todo.formatting import SimpleTaskFormatter
+from todo.formatting import SimpleTaskFormatter, CompletedTaskFormatter, UncompletedTaskFormatter, SubtaskFormatter
 from todo.task import TaskList
 
 
@@ -75,11 +75,11 @@ def toggle_tasks_by_completion() -> None:
     Args:
         None
     """
-    formatter = SimpleTaskFormatter()
+    formatter = CompletedTaskFormatter()
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         sorted_task_list = task_list.tasks
-        print(formatter.format_with_completed(sorted_task_list))
+        print(formatter.format(sorted_task_list))
 
 
 def toggle_tasks_by_imcompletion() -> None:
@@ -88,11 +88,11 @@ def toggle_tasks_by_imcompletion() -> None:
         Args:
             None
         """
-    formatter = SimpleTaskFormatter()
+    formatter = UncompletedTaskFormatter()
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         sorted_task_list = task_list.tasks
-        print(formatter.format_with_uncompleted(sorted_task_list))
+        print(formatter.format(sorted_task_list))
 
 
 def list_tasks_via_completion() -> None:
@@ -214,7 +214,7 @@ def list_tasks_with_subtasks() -> None:
              None
         """
 
-    formatter = SimpleTaskFormatter()
+    formatter = SubtaskFormatter()
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-        print(formatter.format_with_subtasks(task_list.tasks))
+        print(formatter.format(task_list.tasks))

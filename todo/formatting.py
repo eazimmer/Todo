@@ -39,7 +39,16 @@ class SimpleTaskFormatter(TaskFormatter):
 
         return output
 
-    def format_with_completed(self, tasks: Collection[Task]) -> str:
+class CompletedTaskFormatter(TaskFormatter):
+    """A task formatter that displays each tasks that are completed.
+
+        This formatter shows the task ID, a checkbox indicating whether the task
+        has been completed and the name of the task.
+        """
+    # The number of spaces to pad the task ID in the formatting.
+    TASK_ID_PADDING = 5
+
+    def format(self, tasks: Collection[Task]) -> str:
         output = ""
         for task in tasks:
             task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
@@ -51,7 +60,16 @@ class SimpleTaskFormatter(TaskFormatter):
 
         return output
 
-    def format_with_uncompleted(self, tasks: Collection[Task]) -> str:
+class UncompletedTaskFormatter(TaskFormatter):
+    """A task formatter that displays each tasks that are incomplete.
+
+            This formatter shows the task ID, a checkbox indicating whether the task
+            has been completed and the name of the task.
+            """
+    # The number of spaces to pad the task ID in the formatting.
+    TASK_ID_PADDING = 5
+
+    def format(self, tasks: Collection[Task]) -> str:
         output = ""
         for task in tasks:
             task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
@@ -63,7 +81,16 @@ class SimpleTaskFormatter(TaskFormatter):
 
         return output
 
-    def format_with_subtasks(self, tasks: Collection[Task]) -> str:
+class SubtaskFormatter(TaskFormatter):
+    """A task formatter that displays each tasks that are incomplete.
+
+            This formatter shows the task ID, a checkbox indicating whether the task
+            has been completed and the name of the task.
+            """
+    # The number of spaces to pad the task ID in the formatting.
+    TASK_ID_PADDING = 5
+
+    def format(self, tasks: Collection[Task]) -> str:
         output = ""
         checkbox = ""
 
@@ -99,3 +126,5 @@ class SimpleTaskFormatter(TaskFormatter):
                         output += f"{task_id} {checkbox} --- {name}\n"
 
         return output
+
+
