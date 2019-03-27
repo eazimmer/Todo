@@ -9,12 +9,15 @@ parser = argparse.ArgumentParser(
 subparsers = parser.add_subparsers(title="Commands", dest="command")
 
 list_parser = subparsers.add_parser("list", help="List all tasks.")
-toggle_completed_parser = subparsers.add_parser("toggle_completed", help="Toggle list by completed")
-toggle_via_incompletion_parser = subparsers.add_parser("toggle_incompletion",help="List all tasks based on incompletion")
-search_via_completion_parser = subparsers.add_parser("list_completion", help="List all tasks based on completion")
-list_via_alphabet_parser = subparsers.add_parser("list_alph",help="List all tasks in alphabetical order")
-list_via_created_parser = subparsers.add_parser("list_created",help="List all tasks in the time the tasks were created")
-list_via_id = subparsers.add_parser("list_id",help="List all tasks based on order of id")
+list_parser.add_argument("--subtasks", action="store_true", help="List all subtasks from each task")
+list_parser.add_argument("--completion", action="store_true", help="Lists the tasks that are complete")
+list_parser.add_argument("--alphabetical", action="store_true", help="List all tasks in alphabetical order")
+list_parser.add_argument("--created", action="store_true", help="List all tasks in the time the tasks were created")
+list_parser.add_argument("--id", action="store_true", help="List all tasks based on order of id")
+
+toggle_parser = subparsers.add_parser("toggle", help="Toggle tasks based on value")
+toggle_parser.add_argument("--completion", action="store_true", help="Toggle list by completed")
+toggle_parser.add_argument("--incomplete", action="store_true", help="List all tasks based on incompletion")
 
 add_parser = subparsers.add_parser("add", help="Add a task.")
 add_parser.add_argument("name", help="The name of the task.")

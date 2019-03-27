@@ -16,26 +16,35 @@ def main():
     # was called.
     args = parser.parse_args()
     if args.command == "list":
-        # list_tasks()
-        list_tasks_with_subtasks()
+        if args.subtasks:
+            list_tasks_with_subtasks()
+        if args.completion:
+            list_tasks_via_completion()
+        elif args.alphabetical:
+            list_tasks_alphabetically()
+        elif args.created:
+            list_tasks_via_creation()
+        elif args.id:
+            list_tasks_via_id()
+        else:
+            list_tasks()
+
     elif args.command == "add":
         add_task(args.name, args.parent)
+
     elif args.command == "delete":
         delete_task(args.id)
+
     elif args.command == "check":
         check_task(args.id)
-    elif args.command == "toggle_completed":
-        toggle_tasks_by_completion()
-    elif args.command == "list_completion":
-        list_tasks_via_completion()
-    elif args.command == "list_alph":
-        list_tasks_alphabetically()
-    elif args.command == "list_created":
-        list_tasks_via_creation()
-    elif args.command == "list_id":
-        list_tasks_via_id()
-    elif args.command == "toggle_incompletion":
-        toggle_tasks_by_imcompletion()
+
+    elif args.command == "toggle":
+        if args.completion:
+            toggle_tasks_by_completion()
+        elif args.incomplete:
+            toggle_tasks_by_imcompletion()
+        else:
+            list_tasks()
 
 
 if __name__ == "__main__":
