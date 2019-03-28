@@ -22,16 +22,21 @@ class Task:
         created: The time and date at which this task was created. If None,
             this is the current time and date.
         parent: The ID of a task's parent, or None, if the task is top-level.
+        description: The description of a task.
+        due: The due date of a task.
     """
 
     def __init__(
             self, name: str, task_id: int, completed: bool = False,
-            created: Optional[datetime.datetime] = None, parent=None) -> None:
+            created: Optional[datetime.datetime] = None, parent=None,
+            description=None, due=None) -> None:
         self.name: str = name
         self.task_id: int = task_id
         self.completed: bool = completed
         self.created: datetime.datetime = created or datetime.datetime.now()
         self.parent = parent
+        self.description = description
+        self.due = due
 
 
 class TaskList:
@@ -70,7 +75,7 @@ class TaskList:
         """A read-only view of the tasks in this task list."""
         return self._tasks.values()
 
-    def add_task(self, name: str, parent=None) -> None:
+    def add_task(self, name: str, parent=None, description=None, due=None) -> None:
         """Add a task to this task list.
 
         The ID of the task is set to be the lowest ID not currently in use by
@@ -80,14 +85,51 @@ class TaskList:
             name: The name of the task.
             parent: The ID of a task's parent, or None, if the task is
             top-level.
+            description: The description of a task.
+            due: The due date of a task.
         """
         # sub-task
-        if parent is not None:
+        if parent is not None and description is None and due is None:
             new_task = Task(name=name, task_id=self._find_id(),
                             parent=parent)
             self._tasks[new_task.task_id] = new_task
 
-        # parent task
+        # description
+        elif parent is None and description is not None and due is None:
+            new_task = Task(name=name, task_id=self._find_id(),
+                            description=description)
+            self._tasks[new_task.task_id] = new_task
+
+        # due date
+        elif parent is None and description is None and due is not None:
+            new_task = Task(name=name, task_id=self._find_id(), due=due)
+            self._tasks[new_task.task_id] = new_task
+
+        # sub-task and description
+        elif parent is not None and description is not None and due is None:
+            new_task = Task(name=name, task_id=self._find_id(), parent=parent,
+                            description=description)
+            self._tasks[new_task.task_id] = new_task
+
+        # sub-task and due date
+        elif parent is not None and description is None and due is not None:
+            new_task = Task(name=name, task_id=self._find_id(), parent=parent,
+                            due=due)
+            self._tasks[new_task.task_id] = new_task
+
+        # description and due date
+        elif parent is None and description is not None and due is not None:
+            new_task = Task(name=name, task_id=self._find_id(),
+                            description=description, due=due)
+            self._tasks[new_task.task_id] = new_task
+
+        # sub-task, description, and due date
+        elif parent is not None and description is not None and due is not None:
+            new_task = Task(name=name, task_id=self._find_id(), parent=parent,
+                            description=description, due=due)
+            self._tasks[new_task.task_id] = new_task
+
+        # task with no optional flags selected
         else:
             new_task = Task(name=name, task_id=self._find_id())
             self._tasks[new_task.task_id] = new_task

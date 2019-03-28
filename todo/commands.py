@@ -12,22 +12,48 @@ def list_tasks() -> None:
         print(formatter.format(task_list.tasks))
 
 
-def add_task(name: str, parent_id=None) -> None:
+def add_task(name: str, parent_id=None, description=None, due=None) -> None:
     """Add a task.
 
     Args:
         name: The name of the task.
         parent_id: The ID of a sub-task's parent, or None if task is top-level.
+        description: The description for a task.
+        due: The due date associated with a task.
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
 
-        # parent-task
-        if parent_id is None:
+        # no optional flags selected
+        if parent_id is None and description is None and due is None:
             task_list.add_task(name)
 
-        # sub-task
-        elif parent_id is not None:
+        # sub-task only
+        elif parent_id is not None and description is None and due is None:
             task_list.add_task(name, int(parent_id))
+
+        # description only
+        elif parent_id is None and description is not None and due is None:
+            task_list.add_task(name, description)
+
+        # due only
+        elif parent_id is None and description is None and due is not None:
+            task_list.add_task(name, due)
+
+        # sub-task + description
+        elif parent_id is not None and description is not None and due is None:
+            task_list.add_task(name, parent_id, description)
+
+        # sub-task + due
+        elif parent_id is not None and description is None and due is not None:
+            task_list.add_task(name, parent_id, due)
+
+        # description + due
+        elif parent_id is None and description is not None and due is not None:
+            task_list.add_task(name, description, due)
+
+        # sub-task + description + due
+        elif parent_id is not None and description is not None and due is not None:
+            task_list.add_task(name, parent_id, description, due)
 
 
 def delete_task(task_id: int) -> None:

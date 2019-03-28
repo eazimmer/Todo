@@ -30,7 +30,7 @@ def main():
             list_tasks()
 
     elif args.command == "add":
-        add_task(args.name, args.parent)
+        add_task(args.name, args.parent, args.description, args.due)
 
     elif args.command == "delete":
         delete_task(args.id)

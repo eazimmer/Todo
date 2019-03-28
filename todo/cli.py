@@ -21,7 +21,9 @@ toggle_parser.add_argument("--incomplete", action="store_true", help="List all t
 
 add_parser = subparsers.add_parser("add", help="Add a task.")
 add_parser.add_argument("name", help="The name of the task.")
-add_parser.add_argument("-p", "--parent", type=int, help="Used when creating sub-task; designates parent task.")
+add_parser.add_argument("-p", "--parent", type=int, help="Used when creating sub-task; designates parent task.", default=None)
+add_parser.add_argument("-d", "--description", help="Give your task a description.", default=None)
+add_parser.add_argument("--due", help="Give your task a due date.", default=None)
 
 remove_parser = subparsers.add_parser("delete", help="Delete a task.")
 remove_parser.add_argument("id", type=int, help="The ID of the task to delete.")
