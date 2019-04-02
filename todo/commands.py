@@ -1,6 +1,9 @@
 """A function for each command."""
+from typing import Optional
+
 from todo.constants import DEFAULT_LIST_PATH
-from todo.formatting import SimpleTaskFormatter, CompletedTaskFormatter, UncompletedTaskFormatter, SubtaskFormatter
+from todo.formatting import SimpleTaskFormatter, CompletedTaskFormatter, \
+    UncompletedTaskFormatter
 from todo.task import TaskList
 
 
@@ -12,48 +15,21 @@ def list_tasks() -> None:
         print(formatter.format(task_list.tasks))
 
 
-def add_task(name: str, parent_id=None, description=None, due=None) -> None:
+def add_task(
+        name: str, parent_id: Optional[int], description: Optional[str], due
+) -> None:
     """Add a task.
 
     Args:
         name: The name of the task.
-        parent_id: The ID of a sub-task's parent, or None if task is top-level.
-        description: The description for a task.
+        parent_id: The ID of the task's parent, or None if task is top-level.
+        description: The description of the task.
         due: The due date associated with a task.
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-
-        # no optional flags selected
-        if parent_id is None and description is None and due is None:
-            task_list.add_task(name)
-
-        # sub-task only
-        elif parent_id is not None and description is None and due is None:
-            task_list.add_task(name, int(parent_id))
-
-        # description only
-        elif parent_id is None and description is not None and due is None:
-            task_list.add_task(name, description)
-
-        # due only
-        elif parent_id is None and description is None and due is not None:
-            task_list.add_task(name, due)
-
-        # sub-task + description
-        elif parent_id is not None and description is not None and due is None:
-            task_list.add_task(name, parent_id, description)
-
-        # sub-task + due
-        elif parent_id is not None and description is None and due is not None:
-            task_list.add_task(name, parent_id, due)
-
-        # description + due
-        elif parent_id is None and description is not None and due is not None:
-            task_list.add_task(name, description, due)
-
-        # sub-task + description + due
-        elif parent_id is not None and description is not None and due is not None:
-            task_list.add_task(name, parent_id, description, due)
+        task_list.add_task(
+            name, parent=parent_id, description=description, due=due
+        )
 
 
 def delete_task(task_id: int) -> None:
@@ -74,33 +50,16 @@ def check_task(task_id: int) -> None:
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         task = task_list.get_task(task_id)
-        all_complete = True
 
-        # parent-task
-        if task.parent is None:
-            for other_task in task_list.tasks:
-                if other_task.parent is not None and other_task.parent == \
-                            task.task_id and not other_task.completed:
-                    all_complete = False
+        if any(not task.completed for task in task.walk()):
+            print("Not all sub-tasks have been completed!")
+            return
 
-            if not all_complete:
-                print(
-                    "At least one sub-tasks is still incomplete. "
-                    "Check that first!")
-            else:
-                task.completed = True
-
-        # sub-task
-        else:
-            task.completed = True
+        task.completed = True
 
 
 def toggle_tasks_by_completion() -> None:
-    """Toggles list by completed
-
-    Args:
-        None
-    """
+    """Toggles list by completed"""
     formatter = CompletedTaskFormatter()
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
@@ -109,11 +68,7 @@ def toggle_tasks_by_completion() -> None:
 
 
 def toggle_tasks_by_imcompletion() -> None:
-    """Toggles list by incompletion
-
-        Args:
-            None
-        """
+    """Toggles list by incompletion"""
     formatter = UncompletedTaskFormatter()
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
@@ -122,11 +77,7 @@ def toggle_tasks_by_imcompletion() -> None:
 
 
 def list_tasks_via_completion() -> None:
-    """Sort lists based on completion
-
-    Args:
-        None
-    """
+    """Sort lists based on completion"""
     formatter = SimpleTaskFormatter()
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
@@ -147,11 +98,7 @@ def list_tasks_via_completion() -> None:
 
 
 def list_tasks_alphabetically() -> None:
-    """Lists all tasks in alphabetical order
-
-    Args:
-         None
-    """
+    """Lists all tasks in alphabetical order"""
 
     formatter = SimpleTaskFormatter()
 
@@ -176,11 +123,7 @@ def list_tasks_alphabetically() -> None:
 
 
 def list_tasks_via_creation() -> None:
-    """List tasks in order of creation
-
-    Args:
-         None
-    """
+    """List tasks in order of creation"""
 
     formatter = SimpleTaskFormatter()
 
@@ -205,11 +148,7 @@ def list_tasks_via_creation() -> None:
 
 
 def list_tasks_via_id() -> None:
-    """List tasks in order of task iD
-
-        Args:
-             None
-        """
+    """List tasks in order of task ID"""
 
     formatter = SimpleTaskFormatter()
 
@@ -234,13 +173,9 @@ def list_tasks_via_id() -> None:
 
 
 def list_tasks_with_subtasks() -> None:
-    """List tasks alongside their respective sub-tasks if they have any.
+    """List tasks alongside their respective sub-tasks if they have any."""
 
-        Args:
-             None
-        """
-
-    formatter = SubtaskFormatter()
+    formatter = SimpleTaskFormatter(max_depth=None)
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         print(formatter.format(task_list.tasks))

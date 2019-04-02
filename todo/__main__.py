@@ -18,7 +18,7 @@ def main():
     if args.command == "list":
         if args.subtasks:
             list_tasks_with_subtasks()
-        if args.completion:
+        elif args.completion:
             list_tasks_via_completion()
         elif args.alphabetical:
             list_tasks_alphabetically()

@@ -1,10 +1,14 @@
 """Formatters for formatting tasks."""
 
 import abc
-from typing import Collection
+import math
+from typing import Collection, Optional
 
 from todo.task import Task
 
+
+def format_simple_task(task: Task) -> str:
+    """Format a single task as a string."""
 
 class TaskFormatter(abc.ABC):
     """A formatter for formatting a list of tasks.
@@ -27,15 +31,40 @@ class SimpleTaskFormatter(TaskFormatter):
     has been completed and the name of the task.
     """
     # The number of spaces to pad the task ID in the formatting.
-    TASK_ID_PADDING = 5
+    TASK_ID_PADDING = 4
+
+    # The string to indent each sub-task with.
+    SUB_TASK_INDENT = " " * 2
+
+    def __init__(self, max_depth: Optional[int] = 1) -> None:
+        """Initialize the object.
+
+        Args:
+            max_depth: The maximum number of levels of nested tasks to display.
+        """
+        self.max_depth: int = max_depth or math.inf
+        self._current_depth: int = 0
+
+    @property
+    def _indent(self) -> str:
+        return self.SUB_TASK_INDENT * self._current_depth
 
     def format(self, tasks: Collection[Task]) -> str:
         output = ""
+
+        self._current_depth += 1
+
         for task in tasks:
             task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
-            checkbox = "[X]" if task.completed else "[ ]"
+            checkbox = "[x]" if task.completed else "[ ]"
             name = task.name
-            output += f"{task_id} {checkbox} {name}\n"
+
+            output += self._indent + f"{task_id} {checkbox} {name}\n"
+
+            if self._current_depth < self.max_depth:
+                output += self.format(task.children)
+
+        self._current_depth -= 1
 
         return output
 
@@ -80,53 +109,6 @@ class UncompletedTaskFormatter(TaskFormatter):
                 checkbox = "[ ]"
                 name = task.name
                 output += f"{task_id} {checkbox} {name}\n"
-
-        return output
-
-
-class SubtaskFormatter(TaskFormatter):
-    """A task formatter that displays each tasks that are incomplete.
-
-    This formatter shows the task ID, a checkbox indicating whether the task
-    has been completed and the name of the task.
-    """
-    # The number of spaces to pad the task ID in the formatting.
-    TASK_ID_PADDING = 5
-
-    def format(self, tasks: Collection[Task]) -> str:
-        output = ""
-        checkbox = ""
-
-        # Iterate through all tasks
-        for task in tasks:
-
-            task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
-            name = task.name
-            if task.completed:
-                checkbox = "[x]"
-            elif not task.completed:
-                checkbox = "[ ]"
-
-            # Select and print only parent tasks
-            if task.parent is None:
-
-                output += f"{task_id} {checkbox} {name}\n"
-
-                # Find all sub-tasks of a given parent task, and later print it
-                for other_task in tasks:
-
-                    task_id = "{0:<{1}}".format(other_task.task_id,
-                                                self.TASK_ID_PADDING)
-                    checkbox = ""
-                    name = other_task.name
-                    if other_task.completed:
-                        checkbox = "[x]"
-                    elif not other_task.completed:
-                        checkbox = "[ ]"
-
-                    if other_task.parent is not None and other_task.parent == \
-                            task.task_id:
-                        output += f"{task_id} {checkbox} --- {name}\n"
 
         return output
 
