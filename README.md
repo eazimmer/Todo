@@ -2,7 +2,7 @@
 This is a CLI program for managing to-do lists.
 
 # Usage
-To use this program, clone the repository and execute it with `python -m <directory>`.
+To use this program, clone the repository and execute it with `python -m <directory>` on Windows or `python3 -m <directory>` on macOS/Linux.
 
 ## Planned Features
 - [x] Adding, removing and listing tasks
