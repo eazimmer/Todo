@@ -1,7 +1,9 @@
 """The main function of the program."""
 from todo.cli import parser
-from todo.commands import list_tasks, add_task, delete_task, check_task, toggle_tasks_by_completion, list_tasks_via_completion, list_tasks_alphabetically, list_tasks_via_creation, list_tasks_via_id, toggle_tasks_by_imcompletion, list_tasks_with_subtasks
+from todo.commands import list_tasks, add_task, delete_task, check_task
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
+from todo.pipelines import NameSort, CreationTimeSort, CompletionFilter, \
+    MultiPipeline
 from todo.task import TaskList
 
 
@@ -16,18 +18,17 @@ def main():
     # was called.
     args = parser.parse_args()
     if args.command == "list":
-        if args.subtasks:
-            list_tasks_with_subtasks()
-        elif args.completion:
-            list_tasks_via_completion()
-        elif args.alphabetical:
-            list_tasks_alphabetically()
-        elif args.created:
-            list_tasks_via_creation()
-        elif args.id:
-            list_tasks_via_id()
-        else:
-            list_tasks()
+        pipelines = []
+        if "name" in args.sort:
+            pipelines.append(NameSort())
+        if "created" in args.sort:
+            pipelines.append(CreationTimeSort(reverse=True))
+        if "complete" in args.filter:
+            pipelines.append(CompletionFilter(completed=True))
+        if "incomplete" in args.filter:
+            pipelines.append(CompletionFilter(completed=False))
+
+        list_tasks(args.levels, MultiPipeline(pipelines))
 
     elif args.command == "add":
         add_task(args.name, args.parent, args.description, args.due)
@@ -37,14 +38,6 @@ def main():
 
     elif args.command == "check":
         check_task(args.id)
-
-    elif args.command == "toggle":
-        if args.completion:
-            toggle_tasks_by_completion()
-        elif args.incomplete:
-            toggle_tasks_by_imcompletion()
-        else:
-            list_tasks()
 
 
 if __name__ == "__main__":

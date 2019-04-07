@@ -23,6 +23,7 @@ To use this program, clone the repository and execute it with `python -m <direct
 - `cli.py`: The command-line interface for the program.
 - `commands.py`: A function for each command that can be called at the command line.
 - `constants.py`: Constant values to be used program-wide.
+- `pipelines.py`: Methods of sorting and filtering tasks.
 - `__init__.py`: This is executed when the package is imported.
 - `__main__.py`: This is executed when the package is called at the command-line.
 

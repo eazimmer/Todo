@@ -4,11 +4,13 @@ import abc
 import math
 from typing import Collection, Optional
 
+from todo.pipelines import TaskPipeline, PassThroughPipeline
 from todo.task import Task
 
 
 def format_simple_task(task: Task) -> str:
     """Format a single task as a string."""
+
 
 class TaskFormatter(abc.ABC):
     """A formatter for formatting a list of tasks.
@@ -34,32 +36,37 @@ class SimpleTaskFormatter(TaskFormatter):
     TASK_ID_PADDING = 4
 
     # The string to indent each sub-task with.
-    SUB_TASK_INDENT = " " * 2
+    SUB_TASK_INDENT = " " * 4
 
-    def __init__(self, max_depth: Optional[int] = 1) -> None:
+    def __init__(
+            self, max_depth: Optional[int] = None,
+            pipeline: TaskPipeline = PassThroughPipeline()
+    ) -> None:
         """Initialize the object.
 
         Args:
+            pipeline: The pipeline to use to sort/filter the tasks.
             max_depth: The maximum number of levels of nested tasks to display.
         """
         self.max_depth: int = max_depth or math.inf
+        self.pipeline = pipeline
         self._current_depth: int = 0
 
     @property
     def _indent(self) -> str:
-        return self.SUB_TASK_INDENT * self._current_depth
+        return self.SUB_TASK_INDENT * (self._current_depth - 1)
 
+    # TODO: Create decorator for changing current indent.
     def format(self, tasks: Collection[Task]) -> str:
         output = ""
 
         self._current_depth += 1
 
-        for task in tasks:
-            task_id = "{0:<{1}}".format(task.task_id, self.TASK_ID_PADDING)
+        for task in self.pipeline.process(tasks):
             checkbox = "[x]" if task.completed else "[ ]"
-            name = task.name
-
-            output += self._indent + f"{task_id} {checkbox} {name}\n"
+            output += (
+                    self._indent + f"{checkbox} {task.name} ({task.task_id})\n"
+            )
 
             if self._current_depth < self.max_depth:
                 output += self.format(task.children)
