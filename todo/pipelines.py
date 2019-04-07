@@ -74,7 +74,7 @@ class CompletionFilter(TaskPipeline):
         """Initialize the pipeline.
 
         Args:
-            completed: Return completed if `True` or incomplete if `False`.
+            completed: Return completed tasks if True or incomplete if False.
         """
         self.completed = completed
 

@@ -2,8 +2,9 @@
 from todo.cli import parser
 from todo.commands import list_tasks, add_task, delete_task, check_task
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
-from todo.pipelines import NameSort, CreationTimeSort, CompletionFilter, \
-    MultiPipeline
+from todo.pipelines import (
+    NameSort, CreationTimeSort, CompletionFilter, MultiPipeline
+)
 from todo.task import TaskList
 
 
