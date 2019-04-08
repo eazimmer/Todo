@@ -1,6 +1,6 @@
 """The main function of the program."""
 from todo.cli import parser
-from todo.commands import list_tasks, add_task, delete_task, check_task
+from todo.commands import list_tasks, list_detailed_tasks, add_task, delete_task, check_task
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
     NameSort, CreationTimeSort, CompletionFilter, MultiPipeline
@@ -31,14 +31,29 @@ def main():
 
         list_tasks(args.levels, MultiPipeline(pipelines))
 
+    elif args.command == "list_detailed":
+        pipelines = []
+        if "name" in args.sort:
+            pipelines.append(NameSort())
+        if "created" in args.sort:
+            pipelines.append(CreationTimeSort(reverse=True))
+        if "complete" in args.filter:
+            pipelines.append(CompletionFilter(completed=True))
+        if "incomplete" in args.filter:
+            pipelines.append(CompletionFilter(completed=False))
+
+        list_detailed_tasks(args.levels, MultiPipeline(pipelines))
+
     elif args.command == "add":
         add_task(args.name, args.parent, args.description, args.due)
 
     elif args.command == "delete":
-        delete_task(args.id)
+        for item in args.id:
+            delete_task(item)
 
     elif args.command == "check":
-        check_task(args.id)
+        for item in args.id:
+            check_task(item)
 
 
 if __name__ == "__main__":

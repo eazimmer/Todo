@@ -22,6 +22,22 @@ list_parser.add_argument(
     default=[], help="Filter the tasks by this criteria."
 )
 
+list_detailed_parser = subparsers.add_parser(
+    "list_detailed", help="List tasks with additional information.")
+
+list_detailed_parser.add_argument(
+    "-l", "--levels", type=int, default=None,
+    help="Limit the number of levels of displayed sub-tasks."
+)
+list_detailed_parser.add_argument(
+    "-s", "--sort", choices=["name", "created"], action="append", default=[],
+    help="Sort the tasks by this criteria."
+)
+list_detailed_parser.add_argument(
+    "-f", "--filter", choices=["complete", "incomplete"], action="append",
+    default=[], help="Filter the tasks by this criteria."
+)
+
 add_parser = subparsers.add_parser("add", help="Add a task.")
 add_parser.add_argument("name", help="The name of the task.")
 add_parser.add_argument(
@@ -37,10 +53,11 @@ add_parser.add_argument(
 
 remove_parser = subparsers.add_parser("delete", help="Delete a task.")
 remove_parser.add_argument(
-    "id", type=int, help="The ID of the task to delete."
+    "id", type=int, nargs="+", help="The ID(s) of the task(s) to be deleted."
 )
 
 check_parser = subparsers.add_parser("check", help="Mark a task as completed.")
 check_parser.add_argument(
-    "id", type=int, help="The ID of the task to mark as completed."
+    "id", type=int, nargs="+",
+    help="The ID(s) of the task(s) to be marked as completed."
 )

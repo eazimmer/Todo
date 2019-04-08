@@ -2,7 +2,7 @@
 from typing import Optional
 
 from todo.constants import DEFAULT_LIST_PATH
-from todo.formatting import SimpleTaskFormatter
+from todo.formatting import SimpleTaskFormatter, DetailedTaskFormatter
 from todo.pipelines import TaskPipeline
 from todo.task import TaskList
 
@@ -16,6 +16,20 @@ def list_tasks(levels: Optional[int], pipeline: TaskPipeline) -> None:
         pipeline: The pipeline used to sort/filter tasks.
     """
     formatter = SimpleTaskFormatter(max_depth=levels, pipeline=pipeline)
+
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        print(formatter.format(task_list.tasks))
+
+
+def list_detailed_tasks(levels: Optional[int], pipeline: TaskPipeline) -> None:
+    """List all tasks in the console with all available information.
+
+    Args:
+        levels: The maximum number of levels of nested sub-tasks to display.
+            If `None`, there is no limit.
+        pipeline: The pipeline used to sort/filter tasks.
+    """
+    formatter = DetailedTaskFormatter(max_depth=levels, pipeline=pipeline)
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         print(formatter.format(task_list.tasks))
