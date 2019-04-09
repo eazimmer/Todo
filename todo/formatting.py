@@ -110,3 +110,41 @@ class DetailedTaskFormatter(TaskFormatter):
         self._current_depth -= 1
 
         return output
+
+
+class SingleTaskFormatter(TaskFormatter):
+    """A task formatter that shows detailed information about each task.
+
+    This formatter shows a checkbox indicating whether the task has been
+    completed, the name of the task, the task ID, its due date and description.
+    """
+
+    def __init__(
+            self, max_depth: Optional[int] = None,
+    ) -> None:
+        """Initialize the object.
+
+        Args:
+            max_depth: The maximum number of levels of nested tasks to display.
+        """
+        self.max_depth: int = max_depth or math.inf
+        self._current_depth: int = 0
+
+    def format(self, task) -> str:
+        output = ""
+        self._current_depth += 1
+
+        checkbox = "[x]" if task.completed else "[ ]"
+
+        output += INDENT_PREFIX * (self._current_depth - 1)
+        output += f"{checkbox} {task.name} ({task.task_id})\n"
+
+        output += INDENT_PREFIX * self._current_depth
+        output += f"Due: {task.due}\n"
+
+        output += INDENT_PREFIX * self._current_depth
+        output += f"{task.description}\n"
+
+        self._current_depth -= 1
+
+        return output

@@ -61,3 +61,9 @@ check_parser.add_argument(
     "id", type=int, nargs="+",
     help="The ID(s) of the task(s) to be marked as completed."
 )
+
+check_parser = subparsers.add_parser("single", help="display a single task.")
+check_parser.add_argument(
+    "id", type=int, nargs="+",
+    help="The ID of the task to be displayed."
+)
