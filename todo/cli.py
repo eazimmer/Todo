@@ -28,7 +28,7 @@ list_parser.add_argument(
 
 search_parser = subparsers.add_parser("search", help="Search for a specific task")
 search_parser.add_argument("id",type=int, help="The name of the task to be searched for")
-search_parser.add_argument("-name", "--name",
+search_parser.add_argument("-n", "--name",
     help="Add an extra search field based on id", default=None)
 search_parser.add_argument("-t", "--tag", dest="tags", type=str, default=[],
                            nargs="+",

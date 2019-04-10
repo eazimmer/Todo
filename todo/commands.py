@@ -89,19 +89,26 @@ def check_task(task_id: int) -> None:
         print("Unable to find/check specified task ID: " + str(task_id))
 
 
-def single_task(task_id: int) -> None:
+def single_task(task_id: int, task_name: Optional[str]) -> None:
     """Display a single task in the console with all available information.
 
     Args:
         task_id: The ID of the task to display
+        task_name: The name of the task to display
     """
     try:
         levels = None
         formatter = SingleTaskFormatter(max_depth=levels)
 
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-            task = task_list.get_task(task_id)
-            print(formatter.format(task))
+            if task_name is not None:
+                print ("here")
+                for task in task_list.tasks:
+                    if task.name == task_name:
+                        print(formatter.format(task))
+            else:
+                task = task_list.get_task(task_id)
+                print(formatter.format(task))
 
     except KeyError:
         print("Unable to find specified task ID: " + str(task_id))
