@@ -55,6 +55,10 @@ add_parser.add_argument(
 add_parser.add_argument(
     "--due", help="Give your task a due date.", default=None
 )
+add_parser.add_argument(
+    "--priority", help="Give your task a priority number.", default=None
+)
+
 
 remove_parser = subparsers.add_parser("delete", help="Delete a task.")
 remove_parser.add_argument(

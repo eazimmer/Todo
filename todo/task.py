@@ -30,7 +30,8 @@ class Task:
             created: Optional[datetime.datetime] = None,
             parent: Optional[int] = None,
             children: Optional[List["Task"]] = None,
-            description: Optional[str] = None, due=None
+            description: Optional[str] = None, due=None,
+            priority: Optional[str] = None,
     ) -> None:
         self.name: str = name
         self.task_id: int = task_id
@@ -40,6 +41,7 @@ class Task:
         self.children: List[Task] = children or []
         self.description: Optional[str] = description
         self.due = due
+        self.priority: Optional[str] = priority
 
     def walk(self) -> Generator["Task", None, None]:
         """Return a generator for iterating the descendants of this task."""
@@ -98,7 +100,7 @@ class TaskList:
 
     def add_task(
             self, name: str, parent: Optional[int] = None,
-            description: Optional[str] = None, due=None
+            description: Optional[str] = None, due=None, priority: Optional[str] = None
     ) -> None:
         """Add a task to this task list.
 
@@ -111,10 +113,11 @@ class TaskList:
                 top-level.
             description: The description of a task.
             due: The due date of a task.
+            priority: The priority of the task
         """
         new_task = Task(
             name=name, task_id=self._find_id(), parent=parent,
-            description=description, due=due
+            description=description, due=due, priority=priority
         )
         self._tasks[new_task.task_id] = new_task
 

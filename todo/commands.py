@@ -54,7 +54,7 @@ def search_for_task(name: str, task_id: Optional[int])-> None:
 
 
 def add_task(
-        name: str, parent_id: Optional[int], description: Optional[str], due
+        name: str, parent_id: Optional[int], description: Optional[str], due, priority: Optional[str]
 ) -> None:
     """Add a task.
 
@@ -63,10 +63,11 @@ def add_task(
         parent_id: The ID of the task's parent, or None if task is top-level.
         description: The description of the task.
         due: The due date associated with a task.
+        priority: The priority associated with a task
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         task_list.add_task(
-            name, parent=parent_id, description=description, due=due
+            name, parent=parent_id, description=description, due=due, priority=priority
         )
 
 

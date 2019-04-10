@@ -45,7 +45,7 @@ def main():
         list_detailed_tasks(args.levels, MultiPipeline(pipelines))
 
     elif args.command == "add":
-        add_task(args.name, args.parent, args.description, args.due)
+        add_task(args.name, args.parent, args.description, args.due, args.priority)
 
     elif args.command == "search":
         search_for_task(args.name, args.id)
