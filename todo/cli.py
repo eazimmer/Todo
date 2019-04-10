@@ -76,3 +76,16 @@ check_parser.add_argument(
     "id", type=int, nargs="+",
     help="The ID of the task to be displayed."
 )
+
+modify_parser = subparsers.add_parser("modify", help="Modify tasks.")
+add_parser.add_argument(
+    "id", type=int, help="The ID of the task to modify.")
+add_parser.add_argument(
+    "--name", help="Modify the name of the task.", default=None)
+add_parser.add_argument(
+    "-d", "--description", help="Modify the description for a task.",
+    default=None)
+add_parser.add_argument(
+    "--due", help="Modify the due date for a task.", default=None)
+add_parser.add_argument(
+    "--priority", help="Modify your task's priority number.", default=None)

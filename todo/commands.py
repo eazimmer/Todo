@@ -34,6 +34,7 @@ def list_detailed_tasks(levels: Optional[int], pipeline: TaskPipeline) -> None:
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         print(formatter.format(task_list.tasks))
 
+
 def search_for_task(name: str, task_id: Optional[int])-> None:
     """Search for a given task.
 
@@ -118,6 +119,27 @@ def single_task(task_id: int) -> None:
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
             task = task_list.get_task(task_id)
             print(formatter.format(task))
+
+    except KeyError:
+        print("Unable to find specified task ID: " + str(task_id))
+
+
+def modify_task(task_id: int, name: Optional[str], description: Optional[str],
+                due, priority: Optional[str]) -> None:
+    """Modify a task.
+
+    Args:
+        task_id: The ID of the task to delete.
+        name: The edited name of a task.
+        description: The edited description of a task.
+        due: The edited due date of a task.
+        priority: The edited priority number of a task.
+    """
+    try:
+        with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+            task_list.modify_task(
+                task=task_id, name=name, description=description, due=due,
+                priority=priority)
 
     except KeyError:
         print("Unable to find specified task ID: " + str(task_id))

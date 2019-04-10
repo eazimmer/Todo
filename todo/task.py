@@ -145,6 +145,24 @@ class TaskList:
         parent_id = self.get_task(task_id).parent
         return None if parent_id is None else self.get_task(parent_id)
 
+    def modify_task(self, task_id: int, name: Optional[str],
+                    description: Optional[str] = None, due=None,
+                    priority: Optional[str] = None) -> None:
+        """Modify a task in the task list."""
+        task = self.get_task(task_id)
+
+        if name is not None:
+            task.name = name
+
+        if description is not None:
+            task.description = description
+
+        if due is not None:
+            task.due = due
+
+        if priority is not None:
+            task.priority = priority
+
     @classmethod
     def _serialize_task(cls, task: Task) -> Dict[str, Any]:
         """Convert a task to a JSON-compatible dictionary."""
