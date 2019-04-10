@@ -121,6 +121,8 @@ class TaskList:
         if parent is not None:
             self.get_task(parent).children.append(new_task)
 
+        print("Created new task: " + new_task.name + " (ID: " + str(new_task.task_id) + ")")
+
     def remove_task(self, task_id: int) -> Task:
         """Remove the task with the given ID and return it."""
         task = self.get_task(task_id)
@@ -128,7 +130,7 @@ class TaskList:
 
         if parent_task is not None:
             parent_task.children.remove(task)
-
+        print("Removed task: " + task.name + " (ID: " + str(task_id) + ")")
         return self._tasks.pop(task_id)
 
     def get_task(self, task_id: int) -> Task:

@@ -2,7 +2,7 @@
 from typing import Optional
 
 from todo.constants import DEFAULT_LIST_PATH
-from todo.formatting import SimpleTaskFormatter, DetailedTaskFormatter
+from todo.formatting import SimpleTaskFormatter, DetailedTaskFormatter, SingleTaskFormatter
 from todo.pipelines import TaskPipeline
 from todo.task import TaskList
 
@@ -58,8 +58,11 @@ def delete_task(task_id: int) -> None:
     Args:
         task_id: The ID of the task to delete.
     """
-    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-        task_list.remove_task(task_id)
+    try:
+        with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+            task_list.remove_task(task_id)
+    except KeyError:
+        print("Unable to find/delete specified task ID: " + str(task_id))
 
 
 def check_task(task_id: int) -> None:
@@ -68,11 +71,34 @@ def check_task(task_id: int) -> None:
     Args:
         task_id: The ID of the task to mark as completed.
     """
-    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-        task = task_list.get_task(task_id)
+    try:
+        with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+            task = task_list.get_task(task_id)
 
-        if any(not task.completed for task in task.walk()):
-            print("Not all sub-tasks have been completed!")
-            return
+            if any(not task.completed for task in task.walk()):
+                print("Not all sub-tasks have been completed!")
+                return
 
-        task.completed = True
+            task.completed = True
+            print("Task: " + task.name + " (ID: " + str(task_id) + ") "
+                  + "has been checked as complete")
+    except KeyError:
+        print("Unable to find/check specified task ID: " + str(task_id))
+
+
+def single_task(task_id: int) -> None:
+    """Display a single task in the console with all available information.
+
+    Args:
+        task_id: The ID of the task to display
+    """
+    try:
+        levels = None
+        formatter = SingleTaskFormatter(max_depth=levels)
+
+        with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+            task = task_list.get_task(task_id)
+            print(formatter.format(task))
+
+    except KeyError:
+        print("Unable to find specified task ID: " + str(task_id))
