@@ -8,11 +8,11 @@ To use this program, clone the repository and execute it with `python -m <direct
 - [x] Adding, removing and listing tasks
 - [ ] Multiple to-do lists
 - [x] Sorting and filtering of tasks
-- [ ] Searching for tasks
+- [x] Searching for tasks
 - [x] Sub-tasks
-- [ ] Descriptions and due dates for tasks
+- [x] Descriptions and due dates for tasks
 - [ ] Ability to delete/archive completed tasks in bulk
-- [ ] Priorities for tasks
+- [x] Priorities for tasks
 - [ ] Tags for grouping tasks
 - [ ] Reminders
 - [ ] Interactive mode
