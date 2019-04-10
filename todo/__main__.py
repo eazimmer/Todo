@@ -45,10 +45,11 @@ def main():
         list_detailed_tasks(args.levels, MultiPipeline(pipelines))
 
     elif args.command == "add":
-        add_task(args.name, args.parent, args.description, args.due, args.priority)
+        add_task(args.name, args.parent, args.description, args.due,
+                 args.priority, args.tags)
 
     elif args.command == "search":
-        search_for_task(args.name, args.id)
+        search_for_task(args.name, args.id, args.tags)
 
     elif args.command == "delete":
         for item in args.id:
