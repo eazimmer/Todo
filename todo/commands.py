@@ -34,6 +34,24 @@ def list_detailed_tasks(levels: Optional[int], pipeline: TaskPipeline) -> None:
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         print(formatter.format(task_list.tasks))
 
+def search_for_task(name: str, task_id: Optional[int])-> None:
+    """Search for a given task.
+
+        Args:
+            name: The name of the task.
+            task_id: The id of the task
+            description: The description of the task
+        """
+    results = []
+    print ("Here")
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        for task in task_list:
+            if name == task.name:
+                results += task
+            elif task_id == task.task_id:
+                results += task
+        print(formatter.format(results))
+
 
 def add_task(
         name: str, parent_id: Optional[int], description: Optional[str], due
