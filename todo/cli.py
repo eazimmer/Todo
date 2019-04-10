@@ -27,9 +27,8 @@ list_parser.add_argument(
 )
 
 search_parser = subparsers.add_parser("search", help="Search for a specific task")
-search_parser.add_argument("-n", "--name", type=str, dest="name", nargs=1,
-                           help="The name of the task to be searched for")
-search_parser.add_argument("-i", "--id", type=int,
+search_parser.add_argument("id",type=int, help="The name of the task to be searched for")
+search_parser.add_argument("-n", "--name",
     help="Add an extra search field based on id", default=None)
 search_parser.add_argument("-t", "--tag", dest="tags", type=str, default=[],
                            nargs="+",
@@ -68,7 +67,7 @@ add_parser.add_argument(
     "--due", help="Give your task a due date.", default=None
 )
 add_parser.add_argument(
-    "--priority", help="Give your task a priority number.", default=None
+    "--priority", choices=["low", "medium", "high"], help="Give your task a priority number.", default=None
 )
 
 add_parser.add_argument("-t", "--tag", dest="tags", type=str,

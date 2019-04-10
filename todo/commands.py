@@ -35,27 +35,6 @@ def list_detailed_tasks(levels: Optional[int], pipeline: TaskPipeline) -> None:
         print(formatter.format(task_list.tasks))
 
 
-def search_for_task(name: str, task_id: Optional[int], tags: list)-> None:
-    """Search for a given task.
-
-        Args:
-            name: The name of the task.
-            task_id: The id of the task
-            description: The description of the task
-        """
-    results = []
-    print ("Here")
-    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-        for task in task_list:
-            if name == task.name:
-                results += task
-            elif task_id == task.task_id:
-                results += task
-            elif len([tag for tag in tags if tag in task.tags]):
-                results += task
-        print(formatter.format(results))
-
-
 def add_task(
         name: str, parent_id: Optional[int], description: Optional[str],
         due, priority: Optional[str], tags: list
@@ -110,19 +89,26 @@ def check_task(task_id: int) -> None:
         print("Unable to find/check specified task ID: " + str(task_id))
 
 
-def single_task(task_id: int) -> None:
+def single_task(task_id: int, task_name: Optional[str]) -> None:
     """Display a single task in the console with all available information.
 
     Args:
         task_id: The ID of the task to display
+        task_name: The name of the task to display
     """
     try:
         levels = None
         formatter = SingleTaskFormatter(max_depth=levels)
 
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-            task = task_list.get_task(task_id)
-            print(formatter.format(task))
+            if task_name is not None:
+                print ("here")
+                for task in task_list.tasks:
+                    if task.name == task_name:
+                        print(formatter.format(task))
+            else:
+                task = task_list.get_task(task_id)
+                print(formatter.format(task))
 
     except KeyError:
         print("Unable to find specified task ID: " + str(task_id))

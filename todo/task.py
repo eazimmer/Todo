@@ -94,6 +94,11 @@ class TaskList:
             if potential_id not in self._tasks.keys():
                 return potential_id
 
+    def find_task(self, name: str) -> Task:
+        for task in self._tasks:
+            if (name == self.get_task(task).name):
+                return task
+
     @property
     def tasks(self) -> Collection[Task]:
         """A read-only view of the tasks in this task list."""
