@@ -80,3 +80,22 @@ class CompletionFilter(TaskPipeline):
 
     def process(self, tasks: Iterable[Task]) -> Iterable[Task]:
         return (task for task in tasks if task.completed == self.completed)
+
+
+class PriorityFilter(TaskPipeline):
+    """A pipeline that filters tasks by whether they are complete."""
+
+    def __init__(self, priority: str = '') -> None:
+        """Initialize the pipeline.
+
+        Args:
+            priority: Return completed tasks if True or incomplete if False.
+        """
+        self.priority = priority
+
+    def process(self, tasks: Iterable[Task]) -> Iterable[Task]:
+        new_list = []
+        for task in tasks:
+            if task.priority == self.priority:
+                new_list += task
+        return new_list
