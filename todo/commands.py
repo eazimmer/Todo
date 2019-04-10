@@ -34,7 +34,8 @@ def list_detailed_tasks(levels: Optional[int], pipeline: TaskPipeline) -> None:
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         print(formatter.format(task_list.tasks))
 
-def search_for_task(name: str, task_id: Optional[int])-> None:
+
+def search_for_task(name: str, task_id: Optional[int], tags: list)-> None:
     """Search for a given task.
 
         Args:
@@ -50,11 +51,14 @@ def search_for_task(name: str, task_id: Optional[int])-> None:
                 results += task
             elif task_id == task.task_id:
                 results += task
+            elif len([tag for tag in tags if tag in task.tags]):
+                results += task
         print(formatter.format(results))
 
 
 def add_task(
-        name: str, parent_id: Optional[int], description: Optional[str], due, priority: Optional[str]
+        name: str, parent_id: Optional[int], description: Optional[str],
+        due, priority: Optional[str], tags: list
 ) -> None:
     """Add a task.
 
@@ -67,7 +71,8 @@ def add_task(
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         task_list.add_task(
-            name, parent=parent_id, description=description, due=due, priority=priority
+            name, parent=parent_id, description=description, due=due,
+            priority=priority, tags=tags
         )
 
 

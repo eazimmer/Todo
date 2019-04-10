@@ -23,9 +23,13 @@ list_parser.add_argument(
 )
 
 search_parser = subparsers.add_parser("search", help="Search for a specific task")
-search_parser.add_argument("name", help="The name of the task to be searched for")
+search_parser.add_argument("-n", "--name", type=str, dest="name", nargs=1,
+                           help="The name of the task to be searched for")
 search_parser.add_argument("-i", "--id", type=int,
     help="Add an extra search field based on id", default=None)
+search_parser.add_argument("-t", "--tag", dest="tags", type=str, default=[],
+                           nargs="+",
+                           help="The tags used to search for tasks")
 
 list_detailed_parser = subparsers.add_parser(
     "list_detailed", help="List tasks with additional information.")
@@ -35,7 +39,7 @@ list_detailed_parser.add_argument(
     help="Limit the number of levels of displayed sub-tasks."
 )
 list_detailed_parser.add_argument(
-    "-s", "--sort", choices=["name", "created"], action="append", default=[],
+    "-s", "--sort", choices=["name", "created"], action="append", default=None,
     help="Sort the tasks by this criteria."
 )
 list_detailed_parser.add_argument(
@@ -58,6 +62,10 @@ add_parser.add_argument(
 add_parser.add_argument(
     "--priority", help="Give your task a priority number.", default=None
 )
+
+add_parser.add_argument("-t", "--tag", dest="tags", type=str,
+                        nargs="+", default=None,
+                        help="the tags to assign t the task")
 
 
 remove_parser = subparsers.add_parser("delete", help="Delete a task.")
