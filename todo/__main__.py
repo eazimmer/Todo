@@ -1,6 +1,6 @@
 """The main function of the program."""
 from todo.cli import parser
-from todo.commands import list_tasks, search_for_task, list_detailed_tasks, add_task, delete_task, check_task, single_task
+from todo.commands import list_tasks, list_detailed_tasks, add_task, delete_task, check_task, single_task
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
     NameSort, CreationTimeSort, CompletionFilter, PriorityFilter, MultiPipeline
@@ -61,7 +61,7 @@ def main():
                  args.priority, args.tags)
 
     elif args.command == "search":
-        search_for_task(args.name, args.id, args.tags)
+        single_task(args.id)
 
     elif args.command == "delete":
         for item in args.id:
