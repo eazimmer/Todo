@@ -26,13 +26,18 @@ list_parser.add_argument(
     help="Filter the tasks based on priority"
 )
 
-search_parser = subparsers.add_parser("search", help="Search for a specific task")
-search_parser.add_argument("id",type=int, help="The name of the task to be searched for")
-search_parser.add_argument("-n", "--name",
-    help="Add an extra search field based on id", default=None)
-search_parser.add_argument("-t", "--tag", dest="tags", type=str, default=[],
-                           nargs="+",
-                           help="The tags used to search for tasks")
+search_parser = subparsers.add_parser(
+    "search", help="Search for a specific task"
+)
+search_parser.add_argument(
+    "-i","--id",type=int, help="The name of the task to be searched for", default = None
+)
+search_parser.add_argument(
+    "-n", "--name", help="Add an extra search field based on id", default=None
+)
+search_parser.add_argument(
+    "-d", "--description", help="Add an extra search field based on the description", default=None
+)
 
 list_detailed_parser = subparsers.add_parser(
     "list_detailed", help="List tasks with additional information.")

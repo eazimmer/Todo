@@ -61,7 +61,7 @@ def main():
                  args.priority, args.tags)
 
     elif args.command == "search":
-        single_task(args.id, args.name)
+        single_task(args.id, args.name, args.description)
 
     elif args.command == "delete":
         for item in args.id:
