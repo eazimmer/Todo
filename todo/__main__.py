@@ -1,6 +1,6 @@
 """The main function of the program."""
 from todo.cli import parser
-from todo.commands import list_tasks, list_detailed_tasks, add_task, delete_task, check_task, single_task
+from todo.commands import list_tasks, list_detailed_tasks, add_task, delete_task, check_task, single_task, modify_task
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
     NameSort, CreationTimeSort, CompletionFilter, PriorityFilter, MultiPipeline
@@ -74,6 +74,10 @@ def main():
     elif args.command == "single":
         for item in args.id:
             single_task(item)
+
+    elif args.command == "modify":
+        modify_task(args.id, args.name, args.description, args.due,
+                    args.priority)
 
 
 if __name__ == "__main__":
