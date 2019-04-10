@@ -21,6 +21,10 @@ list_parser.add_argument(
     "-f", "--filter", choices=["complete", "incomplete"], action="append",
     default=[], help="Filter the tasks by this criteria."
 )
+list_parser.add_argument(
+    "-p", "--priority", choices=["low", "medium", "high"], action="append", default=[],
+    help="Filter the tasks based on priority"
+)
 
 search_parser = subparsers.add_parser("search", help="Search for a specific task")
 search_parser.add_argument("-n", "--name", type=str, dest="name", nargs=1,
@@ -45,6 +49,10 @@ list_detailed_parser.add_argument(
 list_detailed_parser.add_argument(
     "-f", "--filter", choices=["complete", "incomplete"], action="append",
     default=[], help="Filter the tasks by this criteria."
+)
+list_detailed_parser.add_argument(
+    "-p", "--priority", choices=["low", "medium", "high"], action="append", default=[],
+    help="Filter the tasks based on priority"
 )
 
 add_parser = subparsers.add_parser("add", help="Add a task.")

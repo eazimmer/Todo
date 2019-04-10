@@ -3,7 +3,7 @@ from todo.cli import parser
 from todo.commands import list_tasks, search_for_task, list_detailed_tasks, add_task, delete_task, check_task, single_task
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
-    NameSort, CreationTimeSort, CompletionFilter, MultiPipeline
+    NameSort, CreationTimeSort, CompletionFilter, PriorityFilter, MultiPipeline
 )
 from todo.task import TaskList
 
@@ -28,6 +28,12 @@ def main():
             pipelines.append(CompletionFilter(completed=True))
         if "incomplete" in args.filter:
             pipelines.append(CompletionFilter(completed=False))
+        if "high" in args.priority:
+            pipelines.append(PriorityFilter(priority='high'))
+        if "medium" in args.priority:
+            pipelines.append(PriorityFilter(priority='medium'))
+        if "low" in args.priority:
+            pipelines.append(PriorityFilter(priority='low'))
 
         list_tasks(args.levels, MultiPipeline(pipelines))
 
@@ -41,6 +47,12 @@ def main():
             pipelines.append(CompletionFilter(completed=True))
         if "incomplete" in args.filter:
             pipelines.append(CompletionFilter(completed=False))
+        if "high" in args.priority:
+            pipelines.append(PriorityFilter(priority='high'))
+        if "medium" in args.priority:
+            pipelines.append(PriorityFilter(priority='medium'))
+        if "low" in args.priority:
+            pipelines.append(PriorityFilter(priority='low'))
 
         list_detailed_tasks(args.levels, MultiPipeline(pipelines))
 
