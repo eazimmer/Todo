@@ -1,9 +1,31 @@
 """The command-line interface for the program."""
 import argparse
 
+EXAMPLES = """
+Example Usage:
+    Add an item to the todo list:
+        todo add "Mow the lawn"
+    
+    List items in the todo list:
+        todo list
+    
+    Detailed list of items in the todo list:
+        todo list_detailed
+    
+    Mark item with ID 0 as completed:
+        todo check 0
+        
+    Search for items with "lawn" in the name:
+        todo search -n lawn
+        
+    Delete item with ID 0:
+        todo delete 0
+"""
+
 parser = argparse.ArgumentParser(
     prog="todo", description="Track and manage tasks.",
-    usage="todo [OPTIONS] COMMAND"
+    usage="todo [OPTIONS] COMMAND", epilog=EXAMPLES,
+    formatter_class=argparse.RawTextHelpFormatter
 )
 
 subparsers = parser.add_subparsers(title="Commands", dest="command")
@@ -30,10 +52,12 @@ search_parser = subparsers.add_parser(
     "search", help="Search for a specific task"
 )
 search_parser.add_argument(
-    "-i","--id",type=int, help="The name of the task to be searched for", default = None
+    "-n", "--name", help="The name of the task to be searched for",
+    default=None
 )
 search_parser.add_argument(
-    "-n", "--name", help="Add an extra search field based on id", default=None
+    "-i", "--id", type=int,
+    help="Add an extra search field based on id", default=None
 )
 search_parser.add_argument(
     "-d", "--description", help="Add an extra search field based on the description", default=None
@@ -47,7 +71,7 @@ list_detailed_parser.add_argument(
     help="Limit the number of levels of displayed sub-tasks."
 )
 list_detailed_parser.add_argument(
-    "-s", "--sort", choices=["name", "created"], action="append", default=None,
+    "-s", "--sort", choices=["name", "created"], action="append", default=[],
     help="Sort the tasks by this criteria."
 )
 list_detailed_parser.add_argument(
@@ -98,14 +122,14 @@ check_parser.add_argument(
 )
 
 modify_parser = subparsers.add_parser("modify", help="Modify tasks.")
-add_parser.add_argument(
+modify_parser.add_argument(
     "id", type=int, help="The ID of the task to modify.")
-add_parser.add_argument(
+modify_parser.add_argument(
     "--name", help="Modify the name of the task.", default=None)
-add_parser.add_argument(
+modify_parser.add_argument(
     "-d", "--description", help="Modify the description for a task.",
     default=None)
-add_parser.add_argument(
+modify_parser.add_argument(
     "--due", help="Modify the due date for a task.", default=None)
-add_parser.add_argument(
+modify_parser.add_argument(
     "--priority", help="Modify your task's priority number.", default=None)

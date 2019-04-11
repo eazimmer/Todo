@@ -133,7 +133,7 @@ def modify_task(task_id: int, name: Optional[str], description: Optional[str],
     try:
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
             task_list.modify_task(
-                task=task_id, name=name, description=description, due=due,
+                task_id=task_id, name=name, description=description, due=due,
                 priority=priority)
 
     except KeyError:
