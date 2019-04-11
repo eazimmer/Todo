@@ -52,10 +52,12 @@ search_parser = subparsers.add_parser(
     "search", help="Search for a specific task"
 )
 search_parser.add_argument(
-    "-i","--id",type=int, help="The name of the task to be searched for", default = None
+    "-n", "--name", help="The name of the task to be searched for",
+    default=None
 )
 search_parser.add_argument(
-    "-n", "--name", help="Add an extra search field based on id", default=None
+    "-i", "--id", type=int,
+    help="Add an extra search field based on id", default=None
 )
 search_parser.add_argument(
     "-d", "--description", help="Add an extra search field based on the description", default=None
