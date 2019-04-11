@@ -47,7 +47,7 @@ list_detailed_parser.add_argument(
     help="Limit the number of levels of displayed sub-tasks."
 )
 list_detailed_parser.add_argument(
-    "-s", "--sort", choices=["name", "created"], action="append", default=None,
+    "-s", "--sort", choices=["name", "created"], action="append", default=[],
     help="Sort the tasks by this criteria."
 )
 list_detailed_parser.add_argument(
