@@ -1,9 +1,31 @@
 """The command-line interface for the program."""
 import argparse
 
+EXAMPLES = """
+Example Usage:
+    Add an item to the todo list:
+        todo add "Mow the lawn"
+    
+    List items in the todo list:
+        todo list
+    
+    Detailed list of items in the todo list:
+        todo list_detailed
+    
+    Mark item with ID 0 as completed:
+        todo check 0
+        
+    Search for items with "lawn" in the name:
+        todo search -n lawn
+        
+    Delete item with ID 0:
+        todo delete 0
+"""
+
 parser = argparse.ArgumentParser(
     prog="todo", description="Track and manage tasks.",
-    usage="todo [OPTIONS] COMMAND"
+    usage="todo [OPTIONS] COMMAND", epilog=EXAMPLES,
+    formatter_class=argparse.RawTextHelpFormatter
 )
 
 subparsers = parser.add_subparsers(title="Commands", dest="command")
