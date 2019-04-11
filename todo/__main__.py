@@ -79,6 +79,9 @@ def main():
         modify_task(args.id, args.name, args.description, args.due,
                     args.priority)
 
+    else:
+        parser.print_help()
+
 
 if __name__ == "__main__":
     main()
