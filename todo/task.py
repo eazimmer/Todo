@@ -126,17 +126,54 @@ class TaskList:
             priority: The priority of the task.
             tags: Any flags attached to this task.
         """
-        new_task = Task(
-            name=name, task_id=self._find_id(), parent=parent,
-            description=description, due=due, priority=priority,
-            tags=tags
-        )
-        self._tasks[new_task.task_id] = new_task
+        if due:
+            if self.validate_due_date(due):
+                new_task = Task(
+                    name=name, task_id=self._find_id(), parent=parent,
+                    description=description, due=due, priority=priority,
+                    tags=tags)
 
-        if parent is not None:
-            self.get_task(parent).children.append(new_task)
+                self._tasks[new_task.task_id] = new_task
 
-        print("Created new task: " + new_task.name + " (ID: " + str(new_task.task_id) + ")")
+                if parent is not None:
+                    self.get_task(parent).children.append(new_task)
+
+                print("Created new task: " + new_task.name + " (ID: " + str(
+                    new_task.task_id) + ")")
+
+            else:
+                print("Due date received: " + due +
+                      ". Incorrect data format detected; "
+                      "should be YYYY-MM-DD. Scrapping task.")
+        else:
+            new_task = Task(
+                name=name, task_id=self._find_id(), parent=parent,
+                description=description, due=due, priority=priority,
+                tags=tags)
+
+            self._tasks[new_task.task_id] = new_task
+
+            if parent is not None:
+                self.get_task(parent).children.append(new_task)
+
+            print("Created new task: " + new_task.name + " (ID: " +
+                  str(new_task.task_id) + ")")
+
+    @staticmethod
+    def validate_due_date(due_text):
+        """Validate desired due data against YYYY-MM-DD format.
+
+        Returns True if the date's format is valid. Returns false otherwise.
+
+        Args:
+            due_text: User-inputted due-date.
+        """
+        try:
+            datetime.datetime.strptime(due_text, '%Y-%m-%d')
+        except ValueError:
+            return False
+        else:
+            return True
 
     def remove_task(self, task_id: int) -> Task:
         """Remove the task with the given ID and return it."""
