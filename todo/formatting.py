@@ -102,10 +102,10 @@ class DetailedTaskFormatter(TaskFormatter):
             output += f"Due: {task.due}\n"
 
             output += INDENT_PREFIX * self._current_depth
-            output += f"{task.description}\n"
+            output += f"Desc: {task.description}\n"
 
             output += INDENT_PREFIX * self._current_depth
-            output += f"{task.priority}\n"
+            output += f"Priority: {task.priority}\n"
 
             if self._current_depth < self.max_depth:
                 output += self.format(task.children)
