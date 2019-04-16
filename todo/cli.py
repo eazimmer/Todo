@@ -96,7 +96,8 @@ add_parser.add_argument(
     "--due", help="Give your task a due date.", default=None
 )
 add_parser.add_argument(
-    "--priority", choices=["low", "medium", "high"], help="Give your task a priority number.", default=None
+    "--priority", choices=["low", "medium", "high"],
+    help="Give your task a priority number.", default=None
 )
 
 add_parser.add_argument("-t", "--tag", dest="tags", type=str,

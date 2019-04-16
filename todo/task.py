@@ -24,13 +24,16 @@ class Task:
         parent: The ID of a task's parent, or None, if the task is top-level.
         description: The description of a task.
         due: The due date of a task.
+        priority: The priority level of a task relative to its peer tasks.
+        tags: Any specific flags attached to this task.
     """
     def __init__(
             self, name: str, task_id: int, completed: bool = False,
             created: Optional[datetime.datetime] = None,
             parent: Optional[int] = None,
             children: Optional[List["Task"]] = None,
-            description: Optional[str] = None, due=None,
+            description: Optional[str] = None,
+            due=None,
             priority: Optional[str] = None,
             tags: list = None
     ) -> None:
@@ -43,7 +46,7 @@ class Task:
         self.description: Optional[str] = description
         self.due = due
         self.priority: Optional[str] = priority
-        self.tags: list= tags
+        self.tags: list = tags
 
     def walk(self) -> Generator["Task", None, None]:
         """Return a generator for iterating the descendants of this task."""
@@ -96,7 +99,7 @@ class TaskList:
 
     def find_task(self, name: str) -> Task:
         for task in self._tasks:
-            if (name == self.get_task(task).name):
+            if name == self.get_task(task).name:
                 return task
 
     @property
@@ -107,9 +110,8 @@ class TaskList:
 
     def add_task(
             self, name: str, parent: Optional[int] = None,
-            description: Optional[str] = None, due=None, priority: Optional[
-                str] = None, tags: list = None
-    ) -> None:
+            description: Optional[str] = None, due: Optional[str] = None,
+            priority: Optional[str] = None, tags: list = None) -> None:
         """Add a task to this task list.
 
         The ID of the task is set to be the lowest ID not currently in use by
@@ -121,7 +123,8 @@ class TaskList:
                 top-level.
             description: The description of a task.
             due: The due date of a task.
-            priority: The priority of the task
+            priority: The priority of the task.
+            tags: Any flags attached to this task.
         """
         new_task = Task(
             name=name, task_id=self._find_id(), parent=parent,
@@ -183,7 +186,10 @@ class TaskList:
             "parent": task.parent,
             "children": [
                 cls._serialize_task(sub_task) for sub_task in task.children
-            ]
+            ],
+            "due": task.due,
+            "description": task.description,
+            "priority": task.priority
         }
 
     @classmethod
@@ -198,7 +204,10 @@ class TaskList:
             children=[
                 cls._deserialize_task(sub_task)
                 for sub_task in json_task["children"]
-            ]
+            ],
+            due=json_task["due"],
+            description=json_task["description"],
+            priority=json_task["priority"]
         )
 
     def save(self, path: Path) -> None:
