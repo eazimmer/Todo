@@ -95,3 +95,43 @@ class PriorityFilter(TaskPipeline):
 
     def process(self, tasks: Iterable[Task]) -> Iterable[Task]:
         return (task for task in tasks if task.priority == self.priority)
+
+
+class NameSearch(TaskPipeline):
+    """A pipeline that filters tasks by their name."""
+
+    def __init__(self, names: Iterable[str]) -> None:
+        """Initialize the pipeline.
+
+        Args:
+            names: Only tasks containing one of these strings in their name
+                will be returned.
+        """
+        self.names = names
+
+    def process(self, tasks: Iterable[Task]) -> Iterable[Task]:
+        return (
+            task for task in tasks
+            for name in self.names
+            if name in task.name
+        )
+
+
+class DescriptionSearch(TaskPipeline):
+    """A pipeline that filters tasks by their description."""
+
+    def __init__(self, descriptions: Iterable[str]) -> None:
+        """Initialize the pipeline.
+
+        Args:
+            descriptions: Only tasks containing one of these strings in their
+                description will be returned.
+        """
+        self.descriptions = descriptions
+
+    def process(self, tasks: Iterable[Task]) -> Iterable[Task]:
+        return (
+            task for task in tasks
+            for description in self.descriptions
+            if description in task.description
+        )

@@ -51,21 +51,22 @@ list_parser.add_argument(
     "-p", "--priority", choices=["low", "medium", "high"], action="append",
     default=[], help="Filter the tasks based on priority"
 )
-
-search_parser = subparsers.add_parser(
-    "search", help="Search for a specific task"
+list_parser.add_argument(
+    "-n", "--name",
+    help="Filter tasks matching this name. This can be passed multiple times.",
+    dest="names",
+    action="append",
+    default=[]
 )
-search_parser.add_argument(
-    "-n", "--name", help="The name of the task to be searched for",
-    default=None
-)
-search_parser.add_argument(
-    "-i", "--id", type=int,
-    help="Add an extra search field based on id", default=None
-)
-search_parser.add_argument(
+list_parser.add_argument(
     "-d", "--description",
-    help="Add an extra search field based on the description", default=None
+    help=(
+        "Filter tasks matching this description. "
+        "This can be passed multiple times."
+    ),
+    dest="descriptions",
+    action="append",
+    default=[],
 )
 
 add_parser = subparsers.add_parser("add", help="Add a task.")
@@ -88,7 +89,6 @@ add_parser.add_argument(
     "-t", "--tag", dest="tags", type=str, action="append", default=[],
     help="Assign a tag to the task. This can be passed multiple times."
 )
-
 
 remove_parser = subparsers.add_parser("delete", help="Delete a task.")
 remove_parser.add_argument(

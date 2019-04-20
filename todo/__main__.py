@@ -1,12 +1,13 @@
 """The main function of the program."""
 from todo.cli import parser
 from todo.commands import (
-    list_tasks, add_task, delete_task, check_task, single_task, modify_task,
-    show_info)
+    list_tasks, add_task, delete_task, check_task, modify_task, show_info
+)
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
-    NameSort, CreationTimeSort, CompletionFilter, PriorityFilter, MultiPipeline
-)
+    NameSort, CreationTimeSort, CompletionFilter, PriorityFilter,
+    MultiPipeline,
+    NameSearch, DescriptionSearch)
 from todo.task import TaskList
 
 
@@ -38,6 +39,12 @@ def main():
         if "low" in args.priority:
             pipelines.append(PriorityFilter(priority='low'))
 
+        if args.names:
+            pipelines.append(NameSearch(names=args.names))
+
+        if args.descriptions:
+            pipelines.append(DescriptionSearch(descriptions=args.descriptions))
+
         list_tasks(
             levels=args.levels, info=args.info,
             pipeline=MultiPipeline(pipelines)
@@ -49,9 +56,6 @@ def main():
             description=args.description, due=args.due,
             priority=args.priority, tags=args.tags
         )
-
-    elif args.command == "search":
-        single_task(args.id, args.name, args.description)
 
     elif args.command == "delete":
         for item in args.id:

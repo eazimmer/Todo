@@ -3,8 +3,7 @@ import datetime
 from typing import Optional, List
 
 from todo.constants import DEFAULT_LIST_PATH, DATE_FORMAT
-from todo.formatting import SimpleTaskFormatter, DetailedTaskFormatter, \
-    SingleTaskFormatter
+from todo.formatting import SimpleTaskFormatter, DetailedTaskFormatter
 from todo.pipelines import TaskPipeline
 from todo.task import TaskList
 
@@ -104,39 +103,6 @@ def show_info(task_id: int) -> None:
 
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         print(formatter.format([task_list.get_task(task_id)]))
-
-
-# def search(
-
-
-def single_task(task_id: Optional[int], task_name: Optional[str], task_description: Optional[str]) -> None:
-    """Display a single task in the console with all available information.
-
-    Args:
-        task_id: The ID of the task to display
-        task_name: The name of the task to display
-        task_description: The description of the task to display
-    """
-    try:
-        levels = None
-        formatter = SingleTaskFormatter(max_depth=levels)
-
-        with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-            if task_name is not None:
-                for task in task_list.tasks:
-                    if task.name == task_name:
-                        print(formatter.format(task))
-            elif task_id is not None:
-                task = task_list.get_task(task_id)
-                print(formatter.format(task))
-            elif task_description is not None:
-                for task in task_list.tasks:
-                    if task.description is not None:
-                        if task_description in task.description:
-                            print(formatter.format(task))
-
-    except KeyError:
-        print("Unable to find specified task ID: " + str(task_id))
 
 
 def modify_task(task_id: int, name: Optional[str], description: Optional[str],
