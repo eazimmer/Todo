@@ -33,9 +33,9 @@ class Task:
             parent: Optional[int] = None,
             children: Optional[List["Task"]] = None,
             description: Optional[str] = None,
-            due=None,
+            due: Optional[datetime.datetime] = None,
             priority: Optional[str] = None,
-            tags: list = None
+            tags: Optional[List[str]] = None
     ) -> None:
         self.name: str = name
         self.task_id: int = task_id
@@ -44,9 +44,9 @@ class Task:
         self.parent: Optional[int] = parent
         self.children: List[Task] = children or []
         self.description: Optional[str] = description
-        self.due = due
+        self.due: Optional[datetime.datetime] = due
         self.priority: Optional[str] = priority
-        self.tags: list = tags
+        self.tags: List[str] = tags or []
 
     def walk(self) -> Generator["Task", None, None]:
         """Return a generator for iterating the descendants of this task."""
@@ -97,11 +97,6 @@ class TaskList:
             if potential_id not in self._tasks.keys():
                 return potential_id
 
-    def find_task(self, name: str) -> Task:
-        for task in self._tasks:
-            if name == self.get_task(task).name:
-                return task
-
     @property
     def tasks(self) -> Collection[Task]:
         """A read-only view of the tasks in this task list."""
@@ -111,7 +106,8 @@ class TaskList:
     def add_task(
             self, name: str, parent: Optional[int] = None,
             description: Optional[str] = None, due: Optional[str] = None,
-            priority: Optional[str] = None, tags: list = None) -> None:
+            priority: Optional[str] = None, tags: Optional[List[str]] = None
+    ) -> Task:
         """Add a task to this task list.
 
         The ID of the task is set to be the lowest ID not currently in use by
@@ -125,55 +121,22 @@ class TaskList:
             due: The due date of a task.
             priority: The priority of the task.
             tags: Any flags attached to this task.
+
+        Returns:
+            The newly-created task.
         """
-        if due:
-            if self.validate_due_date(due):
-                new_task = Task(
-                    name=name, task_id=self._find_id(), parent=parent,
-                    description=description, due=due, priority=priority,
-                    tags=tags)
+        new_task = Task(
+            name=name, task_id=self._find_id(), parent=parent,
+            description=description, due=due, priority=priority,
+            tags=tags
+        )
 
-                self._tasks[new_task.task_id] = new_task
+        self._tasks[new_task.task_id] = new_task
 
-                if parent is not None:
-                    self.get_task(parent).children.append(new_task)
+        if parent is not None:
+            self.get_task(parent).children.append(new_task)
 
-                print("Created new task: " + new_task.name + " (ID: " + str(
-                    new_task.task_id) + ")")
-
-            else:
-                print("Due date received: " + due +
-                      ". Incorrect data format detected; "
-                      "should be YYYY-MM-DD. Scrapping task.")
-        else:
-            new_task = Task(
-                name=name, task_id=self._find_id(), parent=parent,
-                description=description, due=due, priority=priority,
-                tags=tags)
-
-            self._tasks[new_task.task_id] = new_task
-
-            if parent is not None:
-                self.get_task(parent).children.append(new_task)
-
-            print("Created new task: " + new_task.name + " (ID: " +
-                  str(new_task.task_id) + ")")
-
-    @staticmethod
-    def validate_due_date(due_text):
-        """Validate desired due data against YYYY-MM-DD format.
-
-        Returns True if the date's format is valid. Returns false otherwise.
-
-        Args:
-            due_text: User-inputted due-date.
-        """
-        try:
-            datetime.datetime.strptime(due_text, '%Y-%m-%d')
-        except ValueError:
-            return False
-        else:
-            return True
+        return new_task
 
     def remove_task(self, task_id: int) -> Task:
         """Remove the task with the given ID and return it."""
@@ -182,7 +145,6 @@ class TaskList:
 
         if parent_task is not None:
             parent_task.children.remove(task)
-        print("Removed task: " + task.name + " (ID: " + str(task_id) + ")")
         return self._tasks.pop(task_id)
 
     def get_task(self, task_id: int) -> Task:
@@ -224,9 +186,10 @@ class TaskList:
             "children": [
                 cls._serialize_task(sub_task) for sub_task in task.children
             ],
-            "due": task.due,
+            "due": task.due.timestamp(),
             "description": task.description,
-            "priority": task.priority
+            "priority": task.priority,
+            "tags": task.tags
         }
 
     @classmethod
@@ -242,9 +205,13 @@ class TaskList:
                 cls._deserialize_task(sub_task)
                 for sub_task in json_task["children"]
             ],
-            due=json_task["due"],
+            due=(
+                None if json_task["due"] is None
+                else datetime.datetime.fromtimestamp(json_task["due"])
+            ),
             description=json_task["description"],
-            priority=json_task["priority"]
+            priority=json_task["priority"],
+            tags=json_task["tags"]
         )
 
     def save(self, path: Path) -> None:

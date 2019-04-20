@@ -4,6 +4,7 @@ import abc
 import math
 from typing import Collection, Optional
 
+from todo.constants import DATE_FORMAT
 from todo.pipelines import TaskPipeline, PassThroughPipeline
 from todo.task import Task
 
@@ -99,13 +100,18 @@ class DetailedTaskFormatter(TaskFormatter):
             output += f"{checkbox} {task.name} ({task.task_id})\n"
 
             output += INDENT_PREFIX * self._current_depth
-            output += f"Due: {task.due}\n"
+            output += f"Due: {task.due.strftime(DATE_FORMAT)}\n"
 
             output += INDENT_PREFIX * self._current_depth
-            output += f"Desc: {task.description}\n"
+            output += f"Description: {task.description}\n"
 
             output += INDENT_PREFIX * self._current_depth
             output += f"Priority: {task.priority}\n"
+
+            output += INDENT_PREFIX * self._current_depth
+            output += f"Tags: {', '.join(task.tags)}\n"
+
+            output += "\n"
 
             if self._current_depth < self.max_depth:
                 output += self.format(task.children)

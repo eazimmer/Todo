@@ -1,6 +1,8 @@
 """The main function of the program."""
 from todo.cli import parser
-from todo.commands import list_tasks, list_detailed_tasks, add_task, delete_task, check_task, single_task, modify_task
+from todo.commands import (
+    list_tasks, add_task, delete_task, check_task, single_task, modify_task,
+    show_info)
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
     NameSort, CreationTimeSort, CompletionFilter, PriorityFilter, MultiPipeline
@@ -18,6 +20,7 @@ def main():
     # Parse arguments and run the appropriate function based on which command
     # was called.
     args = parser.parse_args()
+
     if args.command == "list":
         pipelines = []
         if "name" in args.sort:
@@ -35,30 +38,17 @@ def main():
         if "low" in args.priority:
             pipelines.append(PriorityFilter(priority='low'))
 
-        list_tasks(args.levels, MultiPipeline(pipelines))
-
-    elif args.command == "list_detailed":
-        pipelines = []
-        if "name" in args.sort:
-            pipelines.append(NameSort())
-        if "created" in args.sort:
-            pipelines.append(CreationTimeSort(reverse=True))
-        if "complete" in args.filter:
-            pipelines.append(CompletionFilter(completed=True))
-        if "incomplete" in args.filter:
-            pipelines.append(CompletionFilter(completed=False))
-        if "high" in args.priority:
-            pipelines.append(PriorityFilter(priority='high'))
-        if "medium" in args.priority:
-            pipelines.append(PriorityFilter(priority='medium'))
-        if "low" in args.priority:
-            pipelines.append(PriorityFilter(priority='low'))
-
-        list_detailed_tasks(args.levels, MultiPipeline(pipelines))
+        list_tasks(
+            levels=args.levels, info=args.info,
+            pipeline=MultiPipeline(pipelines)
+        )
 
     elif args.command == "add":
-        add_task(args.name, args.parent, args.description, args.due,
-                 args.priority, args.tags)
+        add_task(
+            name=args.name, parent_id=args.parent,
+            description=args.description, due=args.due,
+            priority=args.priority, tags=args.tags
+        )
 
     elif args.command == "search":
         single_task(args.id, args.name, args.description)
@@ -71,13 +61,14 @@ def main():
         for item in args.id:
             check_task(item)
 
-    elif args.command == "single":
-        for item in args.id:
-            single_task(item)
+    elif args.command == "info":
+        show_info(args.id)
 
     elif args.command == "modify":
-        modify_task(args.id, args.name, args.description, args.due,
-                    args.priority)
+        modify_task(
+            task_id=args.id, name=args.name, description=args.description,
+            due=args.due, priority=args.priority
+        )
 
     else:
         parser.print_help()

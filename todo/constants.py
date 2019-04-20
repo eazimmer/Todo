@@ -9,3 +9,6 @@ DEFAULT_LIST_PATH = TODO_DIRECTORY / "default.json"
 
 # The name of the user's default task list.
 DEFAULT_LIST_NAME = "default"
+
+# The format for parsing and formatting dates.
+DATE_FORMAT = "%Y-%m-%d"
