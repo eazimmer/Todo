@@ -43,7 +43,7 @@ class Task:
         self.created: datetime.datetime = created or datetime.datetime.now()
         self.parent: Optional[int] = parent
         self.children: List[Task] = children or []
-        self.description: Optional[str] = description
+        self.description: str = description or ""
         self.due: Optional[datetime.datetime] = due
         self.priority: Optional[str] = priority
         self.tags: List[str] = tags or []
@@ -186,7 +186,7 @@ class TaskList:
             "children": [
                 cls._serialize_task(sub_task) for sub_task in task.children
             ],
-            "due": task.due.timestamp(),
+            "due": None if task.due is None else task.due.timestamp(),
             "description": task.description,
             "priority": task.priority,
             "tags": task.tags

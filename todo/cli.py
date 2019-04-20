@@ -54,7 +54,6 @@ list_parser.add_argument(
 list_parser.add_argument(
     "-n", "--name",
     help="Filter tasks matching this name. This can be passed multiple times.",
-    dest="names",
     action="append",
     default=[]
 )
@@ -64,7 +63,6 @@ list_parser.add_argument(
         "Filter tasks matching this description. "
         "This can be passed multiple times."
     ),
-    dest="descriptions",
     action="append",
     default=[],
 )

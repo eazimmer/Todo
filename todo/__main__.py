@@ -39,11 +39,11 @@ def main():
         if "low" in args.priority:
             pipelines.append(PriorityFilter(priority='low'))
 
-        if args.names:
-            pipelines.append(NameSearch(names=args.names))
+        if args.name:
+            pipelines.append(NameSearch(names=args.name))
 
-        if args.descriptions:
-            pipelines.append(DescriptionSearch(descriptions=args.descriptions))
+        if args.description:
+            pipelines.append(DescriptionSearch(descriptions=args.description))
 
         list_tasks(
             levels=args.levels, info=args.info,

@@ -95,12 +95,16 @@ class DetailedTaskFormatter(TaskFormatter):
 
         for task in self.pipeline.process(tasks):
             checkbox = "[x]" if task.completed else "[ ]"
+            due_date = (
+                None if task.due is None
+                else task.due.strftime(DATE_FORMAT)
+            )
 
             output += INDENT_PREFIX * (self._current_depth - 1)
             output += f"{checkbox} {task.name} ({task.task_id})\n"
 
             output += INDENT_PREFIX * self._current_depth
-            output += f"Due: {task.due.strftime(DATE_FORMAT)}\n"
+            output += f"Due: {due_date}\n"
 
             output += INDENT_PREFIX * self._current_depth
             output += f"Description: {task.description}\n"

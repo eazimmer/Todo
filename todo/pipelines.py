@@ -112,8 +112,7 @@ class NameSearch(TaskPipeline):
     def process(self, tasks: Iterable[Task]) -> Iterable[Task]:
         return (
             task for task in tasks
-            for name in self.names
-            if name in task.name
+            if any(name in task.name for name in self.names)
         )
 
 
@@ -132,6 +131,8 @@ class DescriptionSearch(TaskPipeline):
     def process(self, tasks: Iterable[Task]) -> Iterable[Task]:
         return (
             task for task in tasks
+            if any(
+            description in task.description
             for description in self.descriptions
-            if description in task.description
+        )
         )

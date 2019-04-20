@@ -30,7 +30,7 @@ def list_tasks(
 
 def add_task(
         name: str, parent_id: Optional[int], description: Optional[str],
-        due: str, priority: Optional[str], tags: Optional[List[str]]
+        due: Optional[str], priority: Optional[str], tags: Optional[List[str]]
 ) -> None:
     """Add a task.
 
@@ -44,17 +44,20 @@ def add_task(
     """
     with TaskList.load(DEFAULT_LIST_PATH) as task_list:
         try:
-            due_date = datetime.datetime.strptime(due, DATE_FORMAT)
+            due_date = (
+                None if due is None
+                else datetime.datetime.strptime(due, DATE_FORMAT)
+            )
         except ValueError:
             print("Error: Due dates must be in YYYY-MM-DD format.")
             return
 
-        new_task = task_list.add_task(
+        task = task_list.add_task(
             name, parent=parent_id, description=description, due=due_date,
             priority=priority, tags=tags
         )
 
-        print(f"Created new task with ID {new_task.task_id}.")
+        print(f"Created new task '{task.name}' with ID {task.task_id}.")
 
 
 def delete_task(task_id: int) -> None:
@@ -65,11 +68,11 @@ def delete_task(task_id: int) -> None:
     """
     try:
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-            task_list.remove_task(task_id)
+            task = task_list.remove_task(task_id)
     except KeyError:
         print(f"There is no task with the ID {task_id}.")
 
-    print(f"Deleted the task with ID {task_id}.")
+    print(f"Deleted the task '{task.name}'.")
 
 
 def check_task(task_id: int) -> None:
@@ -87,10 +90,9 @@ def check_task(task_id: int) -> None:
                 return
 
             task.completed = True
-            print("Task: " + task.name + " (ID: " + str(task_id) + ") "
-                  + "has been checked as complete")
+            print(f"Task '{task.name}' has been completed.")
     except KeyError:
-        print("Unable to find/check specified task ID: " + str(task_id))
+        print(f"There is no task with the ID {task_id}.")
 
 
 def show_info(task_id: int) -> None:
@@ -121,6 +123,5 @@ def modify_task(task_id: int, name: Optional[str], description: Optional[str],
             task_list.modify_task(
                 task_id=task_id, name=name, description=description, due=due,
                 priority=priority)
-
     except KeyError:
-        print("Unable to find specified task ID: " + str(task_id))
+        print(f"There is no task with the ID {task_id}.")
