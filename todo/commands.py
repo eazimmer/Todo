@@ -103,8 +103,11 @@ def show_info(task_id: int) -> None:
     """
     formatter = DetailedTaskFormatter(max_depth=1)
 
-    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-        print(formatter.format([task_list.get_task(task_id)]))
+    try:
+        with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+            print(formatter.format([task_list.get_task(task_id)]))
+    except KeyError:
+        print(f"There is no task with the ID {task_id}.")
 
 
 def modify_task(task_id: int, name: Optional[str], description: Optional[str],
@@ -119,9 +122,18 @@ def modify_task(task_id: int, name: Optional[str], description: Optional[str],
         priority: The edited priority number of a task.
     """
     try:
+        due_date = (
+            None if due is None
+            else datetime.datetime.strptime(due, DATE_FORMAT)
+        )
+    except ValueError:
+        print("Error: Due dates must be in YYYY-MM-DD format.")
+        return
+
+    try:
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
             task_list.modify_task(
-                task_id=task_id, name=name, description=description, due=due,
-                priority=priority)
+                task_id=task_id, name=name, description=description,
+                due=due_date, priority=priority)
     except KeyError:
         print(f"There is no task with the ID {task_id}.")

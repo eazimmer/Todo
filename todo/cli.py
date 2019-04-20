@@ -48,7 +48,7 @@ list_parser.add_argument(
     default=[], help="Filter the tasks by this criteria."
 )
 list_parser.add_argument(
-    "-p", "--priority", choices=["low", "medium", "high"], action="append",
+    "--priority", choices=["low", "medium", "high"], action="append",
     default=[], help="Filter the tasks based on priority"
 )
 list_parser.add_argument(
@@ -108,13 +108,19 @@ info_parser.add_argument(
 
 modify_parser = subparsers.add_parser("modify", help="Modify tasks.")
 modify_parser.add_argument(
-    "id", type=int, help="The ID of the task to modify.")
+    "id", type=int, help="The ID of the task to modify."
+)
 modify_parser.add_argument(
-    "--name", help="Modify the name of the task.", default=None)
+    "-n", "--name", help="Modify the name of the task.", default=None
+)
 modify_parser.add_argument(
     "-d", "--description", help="Modify the description for a task.",
-    default=None)
+    default=None
+)
 modify_parser.add_argument(
-    "--due", help="Modify the due date for a task.", default=None)
+    "--due", help="Modify the due date for a task.", default=None
+)
 modify_parser.add_argument(
-    "--priority", help="Modify your task's priority number.", default=None)
+    "--priority", help="Modify your task's priority number.",
+    default=None
+)
