@@ -111,7 +111,7 @@ def show_info(task_id: int) -> None:
 
 
 def modify_task(task_id: int, name: Optional[str], description: Optional[str],
-                due, priority: Optional[str]) -> None:
+                due, priority: Optional[str], tag:Optional[str]) -> None:
     """Modify a task.
 
     Args:
@@ -120,6 +120,7 @@ def modify_task(task_id: int, name: Optional[str], description: Optional[str],
         description: The edited description of a task.
         due: The edited due date of a task.
         priority: The edited priority number of a task.
+        tag: The edited tag of a task
     """
     try:
         due_date = (
@@ -134,6 +135,6 @@ def modify_task(task_id: int, name: Optional[str], description: Optional[str],
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
             task_list.modify_task(
                 task_id=task_id, name=name, description=description,
-                due=due_date, priority=priority)
+                due=due_date, priority=priority, tag=tag)
     except KeyError:
         print(f"There is no task with the ID {task_id}.")

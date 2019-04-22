@@ -90,16 +90,19 @@ modify_parser.add_argument(
     "id", type=int, help="The ID of the task to modify."
 )
 modify_parser.add_argument(
-    "-n", "--name", help="Modify the name of the task.", default=None
+    "-n", "--name", type=str, help="Modify the name of the task.", default=None
 )
 modify_parser.add_argument(
-    "-d", "--description", help="Modify the description for a task.",
+    "-d", "--description", type=str, help="Modify the description for a task.",
     default=None
 )
 modify_parser.add_argument(
-    "--due", help="Modify the due date for a task.", default=None
+    "-t", "--due", type=str, help="Modify the due date for a task.", default=None
 )
 modify_parser.add_argument(
-    "--priority", help="Modify your task's priority number.",
+    "-p", "--priority", choices=["low", "medium", "high"], type=str, help="Modify your task's priority number.",
     default=None
+)
+modify_parser.add_argument(
+    "-a", "--tag", type=str, help="Modify your task's tag.", default=None
 )

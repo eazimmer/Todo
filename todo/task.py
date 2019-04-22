@@ -158,7 +158,7 @@ class TaskList:
 
     def modify_task(self, task_id: int, name: Optional[str],
                     description: Optional[str] = None, due=None,
-                    priority: Optional[str] = None) -> None:
+                    priority: Optional[str] = None, tag:Optional[str] = None) -> None:
         """Modify a task in the task list."""
         task = self.get_task(task_id)
 
@@ -173,6 +173,9 @@ class TaskList:
 
         if priority is not None:
             task.priority = priority
+
+        if tag is not None:
+            task.tags += tag
 
     @classmethod
     def _serialize_task(cls, task: Task) -> Dict[str, Any]:

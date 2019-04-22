@@ -71,7 +71,7 @@ def main():
     elif args.command == "modify":
         modify_task(
             task_id=args.id, name=args.name, description=args.description,
-            due=args.due, priority=args.priority
+            due=args.due, priority=args.priority, tag=args.tag
         )
 
     else:
