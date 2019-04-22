@@ -84,6 +84,9 @@ info_parser = subparsers.add_parser(
 info_parser.add_argument(
     "id", type=int, help="The ID of the task to show information for."
 )
+info_parser.add_argument(
+    "children", type=str, choices=["True", "False"], help="Shows all children of the task"
+)
 
 modify_parser = subparsers.add_parser("modify", help="Modify tasks.")
 modify_parser.add_argument(

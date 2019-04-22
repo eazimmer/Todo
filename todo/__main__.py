@@ -66,7 +66,10 @@ def main():
             check_task(item)
 
     elif args.command == "info":
-        show_info(args.id)
+        if args.children == "True":
+            show_info(args.id, True)
+        else:
+            show_info(args.id, False)
 
     elif args.command == "modify":
         modify_task(

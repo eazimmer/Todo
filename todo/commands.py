@@ -95,7 +95,7 @@ def check_task(task_id: int) -> None:
         print(f"There is no task with the ID {task_id}.")
 
 
-def show_info(task_id: int) -> None:
+def show_info(task_id: int, show_children: Optional[bool]) -> None:
     """Show information about an individual task.
 
     Args:
@@ -105,7 +105,10 @@ def show_info(task_id: int) -> None:
 
     try:
         with TaskList.load(DEFAULT_LIST_PATH) as task_list:
-            print(formatter.format([task_list.get_task(task_id)]))
+            if show_children == False:
+                print(formatter.format([task_list.get_task(task_id)], False))
+            else:
+                print(formatter.format([task_list.get_task(task_id)], True))
     except KeyError:
         print(f"There is no task with the ID {task_id}.")
 
