@@ -78,6 +78,11 @@ check_parser.add_argument(
     help="The ID(s) of the task(s) to be marked as completed."
 )
 
+uncheck_parser = subparsers.add_parser("uncheck",
+                                       help="Mark a task as uncompleted.")
+uncheck_parser.add_argument("id", type=int, nargs="+",
+                            help="The ID of the task to mark uncompleted.")
+
 info_parser = subparsers.add_parser(
     "info", help="Display detailed information about individual tasks."
 )

@@ -1,7 +1,8 @@
 """The main function of the program."""
 from todo.cli import parser
 from todo.commands import (
-    list_tasks, add_task, delete_task, check_task, modify_task, show_info, remove_all_tasks
+    list_tasks, add_task, delete_task, check_task, modify_task, show_info,
+    remove_all_tasks, uncheck_task
 )
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
@@ -64,6 +65,10 @@ def main():
     elif args.command == "check":
         for item in args.id:
             check_task(item)
+
+    elif args.command == "uncheck":
+        for item in args.id:
+            uncheck_task(item)
 
     elif args.command == "info":
         if args.children == "True":

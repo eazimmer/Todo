@@ -95,11 +95,27 @@ def check_task(task_id: int) -> None:
         print(f"There is no task with the ID {task_id}.")
 
 
+def uncheck_task(task_id: int) -> None:
+    """Mark a task as uncompleted.
+
+    Args:
+        task_id: The ID of the task to mark as completed.
+    """
+    try:
+        with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+            task = task_list.get_task(task_id)
+            task.completed = False
+            print(f"Task '{task.name}' has been marked incomplete.")
+    except KeyError:
+        print(f"There is no task with the ID {task_id}.")
+
+
 def show_info(task_id: int, show_children: Optional[bool]) -> None:
     """Show information about an individual task.
 
     Args:
         task_id: The ID of the task to show information for.
+        show_children: Enter 'True' if you want to show. 'False' to not.
     """
     formatter = DetailedTaskFormatter(max_depth=1)
 
@@ -114,7 +130,7 @@ def show_info(task_id: int, show_children: Optional[bool]) -> None:
 
 
 def modify_task(task_id: int, name: Optional[str], description: Optional[str],
-                due, priority: Optional[str], tag:Optional[str]) -> None:
+                due, priority: Optional[str], tag: Optional[str]) -> None:
     """Modify a task.
 
     Args:
