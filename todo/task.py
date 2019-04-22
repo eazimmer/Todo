@@ -216,8 +216,11 @@ class TaskList:
                 else datetime.datetime.fromtimestamp(json_task["due"])
             ),
             description=json_task["description"],
-            priority=json_task["priority"]
-            # tags=json_task["tags"]
+            priority=json_task["priority"],
+            tags=(
+                None if json_task["tags"] is None
+                else json_task["tags"]
+            )
         )
 
     def save(self, path: Path) -> None:
