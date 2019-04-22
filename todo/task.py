@@ -138,7 +138,6 @@ class TaskList:
 
         return new_task
 
-
     def remove_all_tasks(self) -> None:
         self._tasks.clear()
 
@@ -217,8 +216,8 @@ class TaskList:
                 else datetime.datetime.fromtimestamp(json_task["due"])
             ),
             description=json_task["description"],
-            priority=json_task["priority"],
-            tags=json_task["tags"]
+            priority=json_task["priority"]
+            # tags=json_task["tags"]
         )
 
     def save(self, path: Path) -> None:
