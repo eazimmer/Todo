@@ -1,7 +1,7 @@
 """The main function of the program."""
 from todo.cli import parser
 from todo.commands import (
-    list_tasks, add_task, delete_task, check_task, modify_task, show_info
+    list_tasks, add_task, delete_task, check_task, modify_task, show_info, remove_all_tasks
 )
 from todo.constants import DEFAULT_LIST_PATH, DEFAULT_LIST_NAME
 from todo.pipelines import (
@@ -73,6 +73,9 @@ def main():
             task_id=args.id, name=args.name, description=args.description,
             due=args.due, priority=args.priority, tag=args.tag
         )
+
+    elif args.command == "clear":
+        remove_all_tasks()
 
     else:
         parser.print_help()

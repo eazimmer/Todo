@@ -106,3 +106,7 @@ modify_parser.add_argument(
 modify_parser.add_argument(
     "-a", "--tag", type=str, help="Modify your task's tag.", default=None
 )
+
+clear_parser = subparsers.add_parser(
+    "clear", help="clear all tasks from the whole list"
+)

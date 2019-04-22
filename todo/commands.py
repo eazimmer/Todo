@@ -138,3 +138,12 @@ def modify_task(task_id: int, name: Optional[str], description: Optional[str],
                 due=due_date, priority=priority, tag=tag)
     except KeyError:
         print(f"There is no task with the ID {task_id}.")
+
+
+def remove_all_tasks()-> None:
+    """ This removes all tasks from the task list"""
+    with TaskList.load(DEFAULT_LIST_PATH) as task_list:
+        task_list.remove_all_tasks()
+    print (f" All Tasks have been deleted. ")
+
+

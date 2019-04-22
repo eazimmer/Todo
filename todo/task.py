@@ -138,6 +138,10 @@ class TaskList:
 
         return new_task
 
+
+    def remove_all_tasks(self) -> None:
+        self.tasks.clear()
+
     def remove_task(self, task_id: int) -> Task:
         """Remove the task with the given ID and return it."""
         task = self.get_task(task_id)
