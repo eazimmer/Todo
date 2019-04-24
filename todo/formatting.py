@@ -88,7 +88,7 @@ class DetailedTaskFormatter(TaskFormatter):
         self.pipeline = pipeline
         self._current_depth: int = 0
 
-    def format(self, tasks: Collection[Task], show_children:Optional[bool] = None) -> str:
+    def format(self, tasks: Collection[Task]) -> str:
         output = ""
 
         self._current_depth += 1
@@ -117,11 +117,8 @@ class DetailedTaskFormatter(TaskFormatter):
 
             output += "\n"
 
-            if show_children == True:
-                output += self.format(task.children, show_children)
-
-                if self._current_depth < self.max_depth:
-                    output += self.format(task.children, True)
+            if self._current_depth < self.max_depth:
+                output += self.format(task.children)
 
         self._current_depth -= 1
 
